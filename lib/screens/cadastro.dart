@@ -86,7 +86,7 @@ class _TelaCadastro extends State<TelaCadastro> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                         12,
-                      ), // Alinhe o raio com o do seu TextField
+                      ),
                     ),
                     backgroundColor: Colors.green,
                   ),
@@ -111,9 +111,9 @@ class _TelaCadastro extends State<TelaCadastro> {
               ),
               Row(
                 mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween, // Alinha um em cada ponta
+                    MainAxisAlignment.spaceBetween,
                 crossAxisAlignment:
-                    CrossAxisAlignment.center, // Alinha verticalmente ao centro
+                    CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Criar Conta",

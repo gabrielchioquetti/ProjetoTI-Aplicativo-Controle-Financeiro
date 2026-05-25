@@ -67,7 +67,7 @@ class _TelaLogin extends State<TelaLogin> {
                   style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(10),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12), // Alinhe o raio com o do seu TextField
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       backgroundColor: Colors.green, 
                     ),
