@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_projeto_ti/screens/cadastro.dart';
+import 'package:flutter_projeto_ti/screens/home.dart';
 import 'package:flutter_projeto_ti/screens/login.dart';
 
 void main() {
@@ -11,8 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, 
-      home: TelaLogin(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => TelaLogin(),
+        "/cadastro": (context) => TelaCadastro(),
+        "/home": (context) => TelaHome(),
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }

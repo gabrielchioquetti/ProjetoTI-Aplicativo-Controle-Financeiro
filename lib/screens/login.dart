@@ -112,6 +112,7 @@ class _TelaLogin extends State<TelaLogin> {
                           String senha = senhaController.text;
                           print(email);
                           print(senha);
+                          Navigator.pushNamed(context, "/cadastro",);
                         },
                         child: Text(
                           "Entrar",
