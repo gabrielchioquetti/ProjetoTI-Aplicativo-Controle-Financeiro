@@ -11,6 +11,8 @@ class _TelaCadastro extends State<TelaCadastro> {
   final TextEditingController senhaController = TextEditingController();
   final TextEditingController senhaIgualController = TextEditingController();
 
+  bool esconderSenha = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +46,7 @@ class _TelaCadastro extends State<TelaCadastro> {
               ),
               TextField(
                 controller: emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: "Digite seu email",
                   prefixIcon: Icon(Icons.email),
@@ -55,7 +58,8 @@ class _TelaCadastro extends State<TelaCadastro> {
               ),
               TextField(
                 controller: senhaController,
-                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                obscureText: esconderSenha,
                 decoration: InputDecoration(
                   labelText: "Digite sua senha",
                   prefixIcon: Icon(Icons.lock),
@@ -67,10 +71,21 @@ class _TelaCadastro extends State<TelaCadastro> {
               ),
               TextField(
                 controller: senhaIgualController,
+                keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: "Confirme sua senha",
                   prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        esconderSenha = !esconderSenha;
+                      });
+                    },
+                    icon: Icon(
+                      esconderSenha ? Icons.visibility_off : Icons.visibility,
+                    ),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -84,11 +99,9 @@ class _TelaCadastro extends State<TelaCadastro> {
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(10),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        12,
-                      ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.blue.shade700,
                   ),
                   onPressed: () {
                     String nome = nomeController.text;
@@ -110,10 +123,8 @@ class _TelaCadastro extends State<TelaCadastro> {
                 ),
               ),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                crossAxisAlignment:
-                    CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Criar Conta",
