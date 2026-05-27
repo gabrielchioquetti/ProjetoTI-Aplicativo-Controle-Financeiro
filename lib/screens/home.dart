@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
+import 'package:flutter_projeto_ti/widgets/floating_button.dart';
 
 class TelaHome extends StatefulWidget {
   @override
@@ -356,73 +358,9 @@ class _TelaHome extends State<TelaHome> {
       ),
 
       /// MENU INFERIOR
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+      bottomNavigationBar: BottomNavWidget(paginaAtual: 0),
 
-        notchMargin: 10,
-
-        child: SizedBox(
-          height: 70,
-
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.home, color: Colors.blue.shade700),
-                    Text("Início"),
-                  ],
-                ),
-              ),
-
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.receipt_long, color: Colors.grey),
-                    Text("Transações"),
-                  ],
-                ),
-              ),
-
-              SizedBox(width: 40),
-
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.bar_chart, color: Colors.grey),
-                    Text("Relatórios"),
-                  ],
-                ),
-              ),
-
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.person, color: Colors.grey),
-                    Text("Perfil"),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, 38),
-
-        child: FloatingActionButton(
-          onPressed: () {},
-
-          backgroundColor: Colors.blue.shade700,
-
-          child: Icon(Icons.add, color: Colors.white, size: 32),
-        ),
-      ),
+      floatingActionButton: FloatingButtonWidget(),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
