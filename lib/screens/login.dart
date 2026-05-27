@@ -28,9 +28,7 @@ class _TelaLogin extends State<TelaLogin> {
               child: Center(
                 child: Container(
                   padding: EdgeInsets.all(24),
-                  constraints: BoxConstraints(
-                    maxWidth: 400,
-                  ),
+                  constraints: BoxConstraints(maxWidth: 400),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -118,7 +116,7 @@ class _TelaLogin extends State<TelaLogin> {
                             String senha = senhaController.text;
                             print(email);
                             print(senha);
-                            Navigator.pushNamed(context, "/home",);
+                            Navigator.pushNamed(context, "/home");
                           },
                           child: Text(
                             "Entrar",
@@ -181,10 +179,28 @@ class _TelaLogin extends State<TelaLogin> {
                           ),
                           const SizedBox(width: 15),
                           TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/cadastro",);
-                          },
-                          child: Text("Cadastre-se")
+                            onPressed: () async {
+                              final resultado = await Navigator.pushNamed(context, "/cadastro",);
+                              if (resultado == true) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Cadastro realizado com sucesso"),
+                                    backgroundColor: Colors.green,
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context).size.height - 120,
+                                      left: 20,
+                                      right: 20,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Text("Cadastre-se"),
                           ),
                         ],
                       ),

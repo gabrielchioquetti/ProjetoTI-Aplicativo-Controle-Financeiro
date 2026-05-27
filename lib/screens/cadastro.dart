@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_projeto_ti/controllers/cadastro_controller.dart';
 
 class TelaCadastro extends StatefulWidget {
   @override
@@ -30,9 +31,7 @@ class _TelaCadastro extends State<TelaCadastro> {
               child: Center(
                 child: Container(
                   padding: EdgeInsets.all(24),
-                  constraints: BoxConstraints(
-                    maxWidth: 400,
-                  ),
+                  constraints: BoxConstraints(maxWidth: 400),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -162,11 +161,35 @@ class _TelaCadastro extends State<TelaCadastro> {
                             String email = emailController.text;
                             String senha = senhaController.text;
                             String senhaIgual = senhaIgualController.text;
-                            print(nome);
-                            print(email);
-                            print(senha);
-                            print(senhaIgual);
-                            Navigator.pop(context);
+
+                            String? erro = CadastroController.validarCadastro(
+                              nome: nome,
+                              email: email,
+                              senha: senha,
+                              confirmarSenha: senhaIgual,
+                            );
+
+                            if (erro != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(erro),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context).size.height - 120,
+                                    left: 20,
+                                    right: 20,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                            else {
+                              Navigator.pop(context, true);
+                            }
                           },
                           child: Text(
                             "Cadastrar",
@@ -194,8 +217,8 @@ class _TelaCadastro extends State<TelaCadastro> {
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);
-                          },
-                          child: Text("Entrar")
+                            },
+                            child: Text("Entrar"),
                           ),
                         ],
                       ),
