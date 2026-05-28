@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_projeto_ti/controllers/cadastro_controller.dart';
+import 'package:flutter_projeto_ti/controllers/auth_controller.dart';
 
 class TelaCadastro extends StatefulWidget {
   @override
@@ -162,7 +162,7 @@ class _TelaCadastro extends State<TelaCadastro> {
                             String senha = senhaController.text;
                             String senhaIgual = senhaIgualController.text;
 
-                            String? erro = CadastroController.validarCadastro(
+                            String? erro = AuthController.validarCadastro(
                               nome: nome,
                               email: email,
                               senha: senha,

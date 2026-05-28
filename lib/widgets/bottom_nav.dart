@@ -9,12 +9,9 @@ class BottomNavWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
-
       notchMargin: 10,
-
       child: SizedBox(
         height: 70,
-
         child: Row(
           children: [
             /// HOME
@@ -23,55 +20,40 @@ class BottomNavWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, "/home");
                 },
-
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Icon(
                       Icons.home,
-
-                      color: paginaAtual == 0
-                          ? Colors.blue.shade700
-                          : Colors.grey,
+                      color: paginaAtual == 0 ? Colors.blue.shade700 : Colors.grey,
                     ),
-
                     Text("Início"),
                   ],
                 ),
               ),
             ),
-
             /// TRANSAÇÕES
             Expanded(
               child: InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, "/transacoes");
                 },
-
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Icon(
                       Icons.receipt_long,
-
-                      color: paginaAtual == 1
-                          ? Colors.blue.shade700
-                          : Colors.grey,
+                      color: paginaAtual == 1 ? Colors.blue.shade700 : Colors.grey,
                     ),
-
                     Text("Transações"),
                   ],
                 ),
               ),
             ),
-
             SizedBox(width: 40),
-
-            /// RELATÓRIOS
+            /// Investimentos
             Expanded(
-              child: inkWell(
+              child: InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, "/investimentos",);
                 },
@@ -80,36 +62,26 @@ class BottomNavWidget extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.trending_up,
-
-                      color: paginaAtual == 2
-                          ? Colors.blue.shade700
-                          : Colors.grey,
+                      color: paginaAtual == 2 ? Colors.blue.shade700 : Colors.grey,
                     ),
                     Text("Investimentos"),
                   ],
                 ),
               ),
             ),
-
             /// PERFIL
             Expanded(
               child: InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, "/perfil");
                 },
-
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Icon(
                       Icons.person,
-
-                      color: paginaAtual == 3
-                          ? Colors.blue.shade700
-                          : Colors.grey,
+                      color: paginaAtual == 3 ? Colors.blue.shade700 : Colors.grey,
                     ),
-
                     Text("Perfil"),
                   ],
                 ),

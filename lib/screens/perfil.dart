@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
-import 'package:flutter_projeto_ti/widgets/floating_button.dart';
 
 class TelaPerfil extends StatefulWidget {
   @override
@@ -198,10 +197,6 @@ class _TelaPerfil extends State<TelaPerfil> {
       ),
 
       bottomNavigationBar: BottomNavWidget(paginaAtual: 3),
-
-      floatingActionButton: FloatingButtonWidget(),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

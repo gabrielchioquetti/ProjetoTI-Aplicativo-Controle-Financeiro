@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
-import 'package:flutter_projeto_ti/widgets/floating_button.dart';
 
 class TelaInvestimentos extends StatefulWidget {
   @override
@@ -125,7 +124,12 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
 
-                  IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/simulador-investimentos",);
+                    }, 
+                    icon: Icon(Icons.add)
+                  ),
                 ],
               ),
 
@@ -250,10 +254,6 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
       ),
 
       bottomNavigationBar: BottomNavWidget(paginaAtual: 2),
-
-      floatingActionButton: FloatingButtonWidget(),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

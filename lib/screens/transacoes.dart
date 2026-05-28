@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
-import 'package:flutter_projeto_ti/widgets/floating_button.dart';
+import 'package:flutter_projeto_ti/controllers/transacao_controller.dart';
 
 class TelaTransacoes extends StatefulWidget {
   @override
@@ -47,16 +47,12 @@ class _TelaTransacoes extends State<TelaTransacoes> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Text(
                   titulo,
-
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-
                 SizedBox(height: 4),
-
                 Text(tipo, style: TextStyle(color: Colors.grey)),
               ],
             ),
@@ -65,22 +61,16 @@ class _TelaTransacoes extends State<TelaTransacoes> {
           /// VALOR
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-
             children: [
               Text(
                 valor,
-
                 style: TextStyle(
                   color: receita ? Colors.green : Colors.red,
-
                   fontWeight: FontWeight.bold,
-
                   fontSize: 16,
                 ),
               ),
-
               SizedBox(height: 4),
-
               Text(data, style: TextStyle(color: Colors.grey)),
             ],
           ),
@@ -106,17 +96,30 @@ class _TelaTransacoes extends State<TelaTransacoes> {
 
                   children: [
                     /// TÍTULO
-                    Text(
-                      "Transações",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Transações",
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
 
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
+                        IconButton(
+                          onPressed: () async {
+                            await Navigator.pushNamed( context, "/nova-transacao",);
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            size: 30,
+                          ),
+                        ),
+                      ],
                     ),
-
                     SizedBox(height: 25),
-
                     /// FILTROS
                     Row(
                       children: [
@@ -127,31 +130,20 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                                 filtroSelecionado = 0;
                               });
                             },
-
                             child: Column(
                               children: [
                                 Text(
                                   "Todas",
-
                                   style: TextStyle(
-                                    color: filtroSelecionado == 0
-                                        ? Colors.blue.shade700
-                                        : Colors.grey,
-
+                                    color: filtroSelecionado == 0 ? Colors.blue.shade700 : Colors.grey,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-
                                 SizedBox(height: 10),
-
                                 Container(
                                   height: 3,
-
                                   decoration: BoxDecoration(
-                                    color: filtroSelecionado == 0
-                                        ? Colors.blue.shade700
-                                        : Colors.transparent,
-
+                                    color: filtroSelecionado == 0 ? Colors.blue.shade700 : Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
@@ -159,7 +151,6 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                             ),
                           ),
                         ),
-
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
@@ -167,31 +158,20 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                                 filtroSelecionado = 1;
                               });
                             },
-
                             child: Column(
                               children: [
                                 Text(
                                   "Receitas",
-
                                   style: TextStyle(
-                                    color: filtroSelecionado == 1
-                                        ? Colors.blue.shade700
-                                        : Colors.grey,
-
+                                    color: filtroSelecionado == 1 ? Colors.blue.shade700 : Colors.grey,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-
                                 SizedBox(height: 10),
-
                                 Container(
                                   height: 3,
-
                                   decoration: BoxDecoration(
-                                    color: filtroSelecionado == 1
-                                        ? Colors.blue.shade700
-                                        : Colors.transparent,
-
+                                    color: filtroSelecionado == 1 ? Colors.blue.shade700 : Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
@@ -199,7 +179,6 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                             ),
                           ),
                         ),
-
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
@@ -207,31 +186,20 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                                 filtroSelecionado = 2;
                               });
                             },
-
                             child: Column(
                               children: [
                                 Text(
                                   "Despesas",
-
                                   style: TextStyle(
-                                    color: filtroSelecionado == 2
-                                        ? Colors.blue.shade700
-                                        : Colors.grey,
-
+                                    color: filtroSelecionado == 2 ? Colors.blue.shade700 : Colors.grey,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-
                                 SizedBox(height: 10),
-
                                 Container(
                                   height: 3,
-
                                   decoration: BoxDecoration(
-                                    color: filtroSelecionado == 2
-                                        ? Colors.blue.shade700
-                                        : Colors.transparent,
-
+                                    color: filtroSelecionado == 2 ? Colors.blue.shade700 : Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
@@ -241,109 +209,49 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                         ),
                       ],
                     ),
-
                     SizedBox(height: 30),
-
                     /// MÊS
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                       children: [
                         Text(
                           "Maio de 2024",
-
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         Container(
                           padding: EdgeInsets.all(10),
-
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-
                           child: Icon(Icons.tune),
                         ),
                       ],
                     ),
-
                     SizedBox(height: 20),
-
                     /// TRANSAÇÕES
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
-
                       child: Column(
-                        children: [
-                          itemTransacao(
-                            icone: Icons.work,
-                            corIcone: Colors.green,
-                            titulo: "Salário",
-                            tipo: "Receita",
-                            valor: "+ R\$ 3.000,00",
-                            data: "05/05",
-                            receita: true,
-                          ),
-
-                          itemTransacao(
-                            icone: Icons.shopping_cart,
-                            corIcone: Colors.orange,
-                            titulo: "Mercado",
-                            tipo: "Despesa",
-                            valor: "- R\$ 150,00",
-                            data: "04/05",
-                            receita: false,
-                          ),
-
-                          itemTransacao(
-                            icone: Icons.local_gas_station,
-                            corIcone: Colors.red,
-                            titulo: "Combustível",
-                            tipo: "Despesa",
-                            valor: "- R\$ 100,00",
-                            data: "03/05",
-                            receita: false,
-                          ),
-
-                          itemTransacao(
-                            icone: Icons.computer,
-                            corIcone: Colors.green,
-                            titulo: "Freelance",
-                            tipo: "Receita",
-                            valor: "+ R\$ 500,00",
-                            data: "02/05",
-                            receita: true,
-                          ),
-
-                          itemTransacao(
-                            icone: Icons.restaurant,
-                            corIcone: Colors.orange,
-                            titulo: "Restaurante",
-                            tipo: "Despesa",
-                            valor: "- R\$ 80,00",
-                            data: "01/05",
-                            receita: false,
-                          ),
-
-                          itemTransacao(
-                            icone: Icons.wifi,
-                            corIcone: Colors.red,
-                            titulo: "Internet",
-                            tipo: "Despesa",
-                            valor: "- R\$ 120,00",
-                            data: "01/05",
-                            receita: false,
-                          ),
-                        ],
+                        children:
+                            TransacaoController.listaTransacoes .map((transacao) {
+                          return itemTransacao(
+                            icone: transacao.entrada ? Icons.arrow_upward : Icons.arrow_downward,
+                            corIcone: transacao.entrada ? Colors.green : Colors.red,
+                            titulo: transacao.titulo,
+                            tipo: transacao.categoria,
+                            valor: "${transacao.entrada ? "+" : "-"} R\$ ${transacao.valor.toStringAsFixed(2)}",
+                            data: "${transacao.data.day}/${transacao.data.month}",
+                            receita: transacao.entrada,
+                          );
+                        }).toList(),
                       ),
                     ),
                   ],
@@ -353,12 +261,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavWidget(paginaAtual: 1),
-
-      floatingActionButton: FloatingButtonWidget(),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

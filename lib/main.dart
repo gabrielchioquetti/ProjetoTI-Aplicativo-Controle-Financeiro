@@ -6,6 +6,8 @@ import 'package:flutter_projeto_ti/screens/nova_transacao.dart';
 import 'package:flutter_projeto_ti/screens/perfil.dart';
 import 'package:flutter_projeto_ti/screens/transacoes.dart';
 import 'package:flutter_projeto_ti/screens/investimentos.dart';
+import 'package:flutter_projeto_ti/screens/simulador_investimentos.dart';
+import 'package:flutter_projeto_ti/screens/resultado_simulacao.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +28,8 @@ class MyApp extends StatelessWidget {
         "/nova-transacao": (context) => TelaNovaTransacao(),
         "/perfil": (context) => TelaPerfil(),
         "/investimentos": (context) => TelaInvestimentos(),
+        "/simulador-investimentos": (context) => TelaSimuladorInvestimentos(),
+        "/resultado-simulacao": (context) => TelaResultadoSimulacao(),
       },
       debugShowCheckedModeBanner: false,
     );

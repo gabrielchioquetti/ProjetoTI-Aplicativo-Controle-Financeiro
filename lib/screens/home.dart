@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
-import 'package:flutter_projeto_ti/widgets/floating_button.dart';
+import 'package:flutter_projeto_ti/controllers/transacao_controller.dart';
 
 class TelaHome extends StatefulWidget {
   @override
@@ -126,7 +126,7 @@ class _TelaHome extends State<TelaHome> {
                             SizedBox(height: 15),
 
                             Text(
-                              "R\$ 1.250,00",
+                              "R\$ ${TransacaoController.saldoTotal.toStringAsFixed(2)}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 36,
@@ -152,7 +152,7 @@ class _TelaHome extends State<TelaHome> {
                                     SizedBox(height: 5),
 
                                     Text(
-                                      "R\$ 3.000,00",
+                                      "R\$ ${TransacaoController.totalReceitas.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _TelaHome extends State<TelaHome> {
                                     SizedBox(height: 5),
 
                                     Text(
-                                      "R\$ 1.750,00",
+                                      "R\$ ${TransacaoController.totalDespesas.toStringAsFixed(2)}",
                                       style: TextStyle(
                                         color: Colors.red.shade100,
                                         fontWeight: FontWeight.bold,
@@ -277,76 +277,50 @@ class _TelaHome extends State<TelaHome> {
                       ),
 
                       SizedBox(height: 15),
-
-                      /// ITEM 1
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.blue.shade100,
-
-                          child: Icon(
-                            Icons.attach_money,
-                            color: Colors.blue.shade700,
-                          ),
-                        ),
-
-                        title: Text("Salário"),
-
-                        subtitle: Text("Receita"),
-
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-
-                          crossAxisAlignment: CrossAxisAlignment.end,
-
-                          children: [
-                            Text(
-                              "+ R\$ 3.000,00",
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
+                      Column(
+                        children:
+                            TransacaoController
+                                .listaTransacoes
+                                .reversed
+                                .take(5)
+                                .map((transacao) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: CircleAvatar(
+                                  backgroundColor: transacao.entrada ? Colors.green.shade100 : Colors.red.shade100,
+                                  child: Icon(
+                                    transacao.entrada ? Icons.arrow_upward : Icons.arrow_downward,
+                                    color: transacao.entrada ? Colors.green : Colors.red,
+                                  ),
+                                ),
+                                title: Text(transacao.titulo,),
+                                subtitle: Text( transacao.categoria,),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "${transacao.entrada ? "+" : "-"} R\$ ${transacao.valor.toStringAsFixed(2)}",
+                                      style: TextStyle(
+                                        color: transacao.entrada ? Colors.green : Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${transacao.data.day}/${transacao.data.month}",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-
-                            Text("05/05", style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(),
-
-                      /// ITEM 2
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.red.shade100,
-
-                          child: Icon(Icons.shopping_cart, color: Colors.red),
-                        ),
-
-                        title: Text("Mercado"),
-
-                        subtitle: Text("Despesa"),
-
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-
-                          crossAxisAlignment: CrossAxisAlignment.end,
-
-                          children: [
-                            Text(
-                              "- R\$ 150,00",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-
-                            Text("04/05", style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
+                              Divider(),
+                            ],
+                          );
+                        }).toList(),
                       ),
                     ],
                   ),
@@ -356,13 +330,8 @@ class _TelaHome extends State<TelaHome> {
           ),
         ),
       ),
-
       /// MENU INFERIOR
       bottomNavigationBar: BottomNavWidget(paginaAtual: 0),
-
-      floatingActionButton: FloatingButtonWidget(),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
