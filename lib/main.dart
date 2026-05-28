@@ -5,6 +5,7 @@ import 'package:flutter_projeto_ti/screens/login.dart';
 import 'package:flutter_projeto_ti/screens/nova_transacao.dart';
 import 'package:flutter_projeto_ti/screens/perfil.dart';
 import 'package:flutter_projeto_ti/screens/transacoes.dart';
+import 'package:flutter_projeto_ti/screens/investimentos.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         "/transacoes": (context) => TelaTransacoes(),
         "/nova-transacao": (context) => TelaNovaTransacao(),
         "/perfil": (context) => TelaPerfil(),
+        "/investimentos": (context) => TelaInvestimentos(),
       },
       debugShowCheckedModeBanner: false,
     );

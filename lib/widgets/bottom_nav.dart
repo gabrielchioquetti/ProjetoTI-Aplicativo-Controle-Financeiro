@@ -71,20 +71,23 @@ class BottomNavWidget extends StatelessWidget {
 
             /// RELATÓRIOS
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: inkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, "/investimentos",);
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.trending_up,
 
-                children: [
-                  Icon(
-                    Icons.bar_chart,
-
-                    color: paginaAtual == 2
-                        ? Colors.blue.shade700
-                        : Colors.grey,
-                  ),
-
-                  Text("Relatórios"),
-                ],
+                      color: paginaAtual == 2
+                          ? Colors.blue.shade700
+                          : Colors.grey,
+                    ),
+                    Text("Investimentos"),
+                  ],
+                ),
               ),
             ),
 
