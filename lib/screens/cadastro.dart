@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projeto_ti/controllers/auth_controller.dart';
+import 'package:flutter_projeto_ti/services/usuario_service.dart';
 
 class TelaCadastro extends StatefulWidget {
   @override
@@ -156,7 +157,7 @@ class _TelaCadastro extends State<TelaCadastro> {
                             ),
                             backgroundColor: Colors.blue.shade700,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             String nome = nomeController.text;
                             String email = emailController.text;
                             String senha = senhaController.text;
@@ -174,21 +175,33 @@ class _TelaCadastro extends State<TelaCadastro> {
                                 SnackBar(
                                   content: Text(erro),
                                   backgroundColor: Colors.red,
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context).size.height - 120,
-                                    left: 20,
-                                    right: 20,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  duration: Duration(seconds: 2),
                                 ),
                               );
+                              return;
                             }
-                            else {
+
+                            bool sucesso = await UsuarioService.cadastrar(
+                              nome: nome,
+                              email: email,
+                              senha: senha,
+                            );
+
+                            if (sucesso) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Cadastro realizado com sucesso"),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+
                               Navigator.pop(context, true);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Erro ao cadastrar usuário"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             }
                           },
                           child: Text(

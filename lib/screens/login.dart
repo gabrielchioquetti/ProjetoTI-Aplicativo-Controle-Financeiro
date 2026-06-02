@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_projeto_ti/services/usuario_service.dart';
+
 class TelaLogin extends StatefulWidget {
   @override
   State<TelaLogin> createState() => _TelaLogin();
@@ -111,12 +113,25 @@ class _TelaLogin extends State<TelaLogin> {
                             ),
                             backgroundColor: Colors.blue.shade700,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             String email = emailController.text;
                             String senha = senhaController.text;
-                            print(email);
-                            print(senha);
-                            Navigator.pushNamed(context, "/home");
+
+                            bool sucesso = await UsuarioService.login(
+                              email: email,
+                              senha: senha,
+                            );
+
+                            if (sucesso) {
+                              Navigator.pushReplacementNamed(context, "/home");
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Email ou senha inválidos"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
                           },
                           child: Text(
                             "Entrar",
