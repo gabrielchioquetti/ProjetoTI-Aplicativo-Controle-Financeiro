@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_projeto_ti/services/usuario_service.dart';
+import 'package:flutter_projeto_ti/services/firebase_auth_service.dart';
 
 class TelaLogin extends StatefulWidget {
   @override
@@ -117,7 +117,7 @@ class _TelaLogin extends State<TelaLogin> {
                             String email = emailController.text;
                             String senha = senhaController.text;
 
-                            bool sucesso = await UsuarioService.login(
+                            bool sucesso = await FirebaseAuthService.login(
                               email: email,
                               senha: senha,
                             );

@@ -1,7 +1,8 @@
+// lib/screens/tela_nova_transacao.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_projeto_ti/services/transacao_service.dart';
+import 'package:flutter_projeto_ti/utils/categorias.dart';
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
-import 'package:flutter_projeto_ti/models/transacao.dart';
-import 'package:flutter_projeto_ti/controllers/transacao_controller.dart';
 
 class TelaNovaTransacao extends StatefulWidget {
   @override
@@ -10,63 +11,51 @@ class TelaNovaTransacao extends StatefulWidget {
 
 class _TelaNovaTransacao extends State<TelaNovaTransacao> {
   bool receita = true;
+  bool _salvando = false;
 
   final TextEditingController valorController = TextEditingController();
-
   final TextEditingController descricaoController = TextEditingController();
-
   final TextEditingController dataController = TextEditingController();
 
   String? categoriaSelecionada;
-
   DateTime? dataSelecionada;
 
-  final List<String> categorias = [
-    "Salário",
-    "Mercado",
-    "Transporte",
-    "Lazer",
-    "Aluguel",
-  ];
+  @override
+  void dispose() {
+    valorController.dispose();
+    descricaoController.dispose();
+    dataController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-
         centerTitle: true,
-
         title: Text(
           "Nova Transação",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-
         iconTheme: IconThemeData(color: Colors.black),
       ),
-
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
             /// RECEITA / DESPESA
             Container(
               height: 55,
-
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(14),
               ),
-
               child: Row(
                 children: [
-                  /// RECEITA
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -74,17 +63,16 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                           receita = true;
                         });
                       },
-
                       child: Container(
                         decoration: BoxDecoration(
-                          color: receita ? Colors.blue.shade700 : Colors.transparent,
+                          color: receita
+                              ? Colors.blue.shade700
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(14),
                         ),
-
                         child: Center(
                           child: Text(
                             "Receita",
-
                             style: TextStyle(
                               color: receita ? Colors.white : Colors.black,
                               fontWeight: FontWeight.bold,
@@ -94,8 +82,6 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                       ),
                     ),
                   ),
-
-                  /// DESPESA
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -103,13 +89,13 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                           receita = false;
                         });
                       },
-
                       child: Container(
                         decoration: BoxDecoration(
-                          color: !receita ? Colors.red.shade400 : Colors.transparent,
+                          color: !receita
+                              ? Colors.red.shade400
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(14),
                         ),
-
                         child: Center(
                           child: Text(
                             "Despesa",
@@ -126,6 +112,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
               ),
             ),
             SizedBox(height: 25),
+
             /// VALOR
             Text(
               "Valor",
@@ -134,14 +121,13 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-
             SizedBox(height: 10),
-
             TextField(
               controller: valorController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 hintText: "R\$ 0,00",
+                prefixText: "R\$ ",
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -151,7 +137,8 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
               ),
             ),
             SizedBox(height: 20),
-            /// CATEGORIA
+
+            /// CATEGORIA COM ÍCONES
             Text(
               "Categoria",
               style: TextStyle(
@@ -170,13 +157,17 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                   borderSide: BorderSide.none,
                 ),
               ),
-
               hint: Text("Selecionar categoria"),
-
-              items: categorias.map((categoria) {
+              items: Categoria.todas.map((categoria) {
                 return DropdownMenuItem(
-                  value: categoria,
-                  child: Text(categoria),
+                  value: categoria.nome,
+                  child: Row(
+                    children: [
+                      Icon(categoria.icone, size: 20, color: Colors.blue),
+                      SizedBox(width: 12),
+                      Text(categoria.nome),
+                    ],
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
@@ -184,8 +175,15 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                   categoriaSelecionada = value;
                 });
               },
+              validator: (value) {
+                if (value == null) {
+                  return "Selecione uma categoria";
+                }
+                return null;
+              },
             ),
             SizedBox(height: 20),
+
             /// DESCRIÇÃO
             Text(
               "Descrição",
@@ -208,6 +206,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
               ),
             ),
             SizedBox(height: 20),
+
             /// DATA
             Text(
               "Data",
@@ -221,8 +220,8 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
               controller: dataController,
               readOnly: true,
               decoration: InputDecoration(
-                hintText: "20/05/2024",
-                suffixIcon: Icon(Icons.calendar_today),
+                hintText: "DD/MM/AAAA",
+                suffixIcon: Icon(Icons.calendar_today, color: Colors.blue),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -234,16 +233,33 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 DateTime? data = await showDatePicker(
                   context: context,
                   firstDate: DateTime(2020),
-                  lastDate: DateTime(2030),
+                  lastDate: DateTime.now(),
                   initialDate: DateTime.now(),
+                  locale: Locale('pt', 'BR'),
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: ColorScheme.light(
+                          primary: Colors.blue,
+                          onPrimary: Colors.white,
+                          onSurface: Colors.black,
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
                 );
                 if (data != null) {
-                  dataSelecionada = data;
-                  dataController.text = "${data.day}/${data.month}/${data.year}";
+                  setState(() {
+                    dataSelecionada = data;
+                    dataController.text =
+                        "${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year}";
+                  });
                 }
               },
             ),
             SizedBox(height: 40),
+
             /// BOTÃO
             SizedBox(
               width: double.infinity,
@@ -255,71 +271,101 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                onPressed: () {
-                  if (
-                    valorController.text.isEmpty ||
-                    descricaoController.text.isEmpty ||
-                    categoriaSelecionada == null ||
-                    dataSelecionada == null
-                  ) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Preencha todos os campos"),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
+                onPressed: _salvando ? null : _salvarTransacao,
+                child: _salvando
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        "Salvar Transação",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                    );
-                    return;
-                  }
-                  double? valor = double.tryParse(
-                    valorController.text.replaceAll(",", "."),
-                  );
-
-                  if (valor == null) {
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Digite um valor válido"),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-
-                    return;
-                  }
-                  Transacao novaTransacao = Transacao(
-                    titulo: descricaoController.text,
-                    valor: valor,
-                    categoria: categoriaSelecionada!,
-                    data: dataSelecionada!,
-                    entrada: receita,
-                  );
-                  TransacaoController.adicionarTransacao(
-                    novaTransacao,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Transação salva com sucesso"),
-                      backgroundColor: Colors.green,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Salvar Transação",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
               ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavWidget(paginaAtual: 1),
+    );
+  }
+
+  Future<void> _salvarTransacao() async {
+    // Validações
+    if (valorController.text.isEmpty) {
+      _mostrarErro("Digite um valor");
+      return;
+    }
+
+    if (descricaoController.text.isEmpty) {
+      _mostrarErro("Digite uma descrição");
+      return;
+    }
+
+    if (categoriaSelecionada == null) {
+      _mostrarErro("Selecione uma categoria");
+      return;
+    }
+
+    if (dataSelecionada == null) {
+      _mostrarErro("Selecione uma data");
+      return;
+    }
+
+    String valorLimpo = valorController.text.replaceAll(",", ".");
+    double? valor = double.tryParse(valorLimpo);
+
+    if (valor == null || valor <= 0) {
+      _mostrarErro("Digite um valor válido maior que zero");
+      return;
+    }
+
+    setState(() {
+      _salvando = true;
+    });
+
+    try {
+      await TransacaoService.salvar(
+        descricao: descricaoController.text,
+        valor: receita ? valor : -valor,
+        categoria: categoriaSelecionada!,
+        data: dataSelecionada!,
+        entrada: receita,
+      );
+
+      _mostrarSucesso("Transação salva com sucesso!");
+      Navigator.pop(context, true);
+    } catch (e) {
+      _mostrarErro("Erro ao salvar: ${e.toString()}");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _salvando = false;
+        });
+      }
+    }
+  }
+
+  void _mostrarErro(String mensagem) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensagem),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _mostrarSucesso(String mensagem) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensagem),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ),
     );
   }
 }

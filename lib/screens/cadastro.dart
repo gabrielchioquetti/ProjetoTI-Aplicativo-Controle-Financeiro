@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projeto_ti/controllers/auth_controller.dart';
-import 'package:flutter_projeto_ti/services/usuario_service.dart';
+import 'package:flutter_projeto_ti/services/firebase_auth_service.dart';
 
 class TelaCadastro extends StatefulWidget {
   @override
@@ -180,7 +180,7 @@ class _TelaCadastro extends State<TelaCadastro> {
                               return;
                             }
 
-                            bool sucesso = await UsuarioService.cadastrar(
+                            bool sucesso = await FirebaseAuthService.cadastrar(
                               nome: nome,
                               email: email,
                               senha: senha,
