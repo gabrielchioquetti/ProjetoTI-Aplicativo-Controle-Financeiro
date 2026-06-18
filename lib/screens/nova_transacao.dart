@@ -1,4 +1,3 @@
-// lib/screens/tela_nova_transacao.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_projeto_ti/services/transacao_service.dart';
 import 'package:flutter_projeto_ti/utils/categorias.dart';

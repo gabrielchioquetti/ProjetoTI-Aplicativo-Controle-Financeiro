@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_projeto_ti/services/transacao_service.dart';
-import 'package:flutter_projeto_ti/utils/categorias.dart'; // ← USANDO CATEGORIAS CENTRALIZADAS
+import 'package:flutter_projeto_ti/utils/categorias.dart';
 
 class TelaEditarTransacao extends StatefulWidget {
   @override
