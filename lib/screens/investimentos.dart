@@ -1,4 +1,3 @@
-// screens/investimentos.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
@@ -6,12 +5,13 @@ import 'package:flutter_projeto_ti/models/investimento.dart';
 import 'package:flutter_projeto_ti/services/investimento_service.dart';
 
 class TelaInvestimentos extends StatefulWidget {
+  const TelaInvestimentos({super.key});
+
   @override
-  State<TelaInvestimentos> createState() => _TelaInvestimentos();
+  State<TelaInvestimentos> createState() => _TelaInvestimentosState();
 }
 
-class _TelaInvestimentos extends State<TelaInvestimentos> {
-  // Calcular total investido a partir dos documentos
+class _TelaInvestimentosState extends State<TelaInvestimentos> {
   double _calcularTotalInvestido(List<QueryDocumentSnapshot> docs) {
     double total = 0;
     for (var doc in docs) {
@@ -21,7 +21,6 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
     return total;
   }
 
-  // Calcular rendimento total
   double _calcularRendimentoTotal(List<QueryDocumentSnapshot> docs) {
     double total = 0;
     for (var doc in docs) {
@@ -40,23 +39,19 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
   Widget itemInvestimento(DocumentSnapshot doc) {
     final dados = doc.data() as Map<String, dynamic>;
     final id = doc.id;
-    
-    // Converter Timestamp para DateTime
+
     final timestamp = dados['dataSimulacao'] as Timestamp;
     final DateTime data = timestamp.toDate();
-    
-    // Criar objeto Investimento
     final investimento = Investimento.fromJson({
       'id': id,
       ...dados,
       'dataSimulacao': data.toIso8601String(),
     });
 
-    // Definir ícone baseado no tipo
     IconData icone;
     Color corIcone;
     String tipo = investimento.tipo.toLowerCase();
-    
+
     if (tipo.contains('tesouro')) {
       icone = Icons.account_balance;
       corIcone = Colors.green;
@@ -84,8 +79,8 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
     String dataFormatada = '${data.day}/${data.month}/${data.year}';
 
     return Container(
-      margin: EdgeInsets.only(bottom: 14),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
@@ -93,7 +88,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -112,66 +107,72 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
         },
         child: Row(
           children: [
-            /// ÍCONE
             Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: corIcone.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icone, color: corIcone, size: 24),
             ),
-            SizedBox(width: 14),
+            const SizedBox(width: 14),
 
-            /// TEXTO
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     investimento.tipo,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 12, color: Colors.grey),
-                      SizedBox(width: 4),
+                      const Icon(Icons.calendar_today,
+                          size: 12, color: Colors.grey),
+                      const SizedBox(width: 4),
                       Text(
                         dataFormatada,
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
-                      SizedBox(width: 12),
-                      Icon(Icons.trending_up, size: 12, color: Colors.grey),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.trending_up,
+                          size: 12, color: Colors.grey),
+                      const SizedBox(width: 4),
                       Text(
                         '${investimento.prazoMeses} meses',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                      style: const TextStyle(color: Colors.grey, fontSize: 13),
                       children: [
-                        TextSpan(text: "Rendimento: "),
+                        const TextSpan(text: "Rendimento: "),
                         TextSpan(
                           text: investimento.lucroLiquido >= 0
                               ? '+ R\$ ${investimento.lucroLiquido.toStringAsFixed(2)}'
                               : '- R\$ ${investimento.lucroLiquido.abs().toStringAsFixed(2)}',
                           style: TextStyle(
-                            color: investimento.temLucro ? Colors.green : Colors.red,
+                            color: investimento.temLucro
+                                ? Colors.green
+                                : Colors.red,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
                           text: ' (${investimento.rendimentoFormatado})',
                           style: TextStyle(
-                            color: investimento.temLucro ? Colors.green : Colors.red,
+                            color: investimento.temLucro
+                                ? Colors.green
+                                : Colors.red,
                             fontSize: 12,
                           ),
                         ),
@@ -182,23 +183,23 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
               ),
             ),
 
-            /// VALOR
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   'R\$ ${investimento.valorFinalLiquido.toStringAsFixed(2)}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: investimento.temLucro 
-                        ? Colors.green.withOpacity(0.1) 
+                    color: investimento.temLucro
+                        ? Colors.green.withOpacity(0.1)
                         : Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -211,8 +212,8 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                     ),
                   ),
                 ),
-                SizedBox(height: 6),
-                Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+                const SizedBox(height: 6),
+                const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
               ],
             ),
           ],
@@ -226,7 +227,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Excluir investimento",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -234,7 +235,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
+              child: const Text(
                 "Cancelar",
                 style: TextStyle(color: Colors.grey),
               ),
@@ -244,14 +245,16 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                 Navigator.pop(context);
                 try {
                   await InvestimentoService.excluir(id);
+                  if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("Investimento excluído com sucesso!"),
                       backgroundColor: Colors.red,
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
                 } catch (e) {
+                  if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Erro ao excluir: $e"),
@@ -262,7 +265,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                 }
               },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: Text(
+              child: const Text(
                 "Excluir",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -282,7 +285,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
           stream: InvestimentoService.listar(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -299,20 +302,22 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 48, color: Colors.red),
-                    SizedBox(height: 16),
-                    Text(
+                    const Icon(Icons.error_outline,
+                        size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    const Text(
                       "Erro ao carregar investimentos",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(snapshot.error.toString()),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
                         setState(() {});
                       },
-                      child: Text("Tentar novamente"),
+                      child: const Text("Tentar novamente"),
                     ),
                   ],
                 ),
@@ -321,16 +326,15 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return SingleChildScrollView(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// TOPO
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Meus Investimentos",
+                        const Text(
+                          "Minhas Simulações",
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -339,19 +343,19 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                         IconButton(
                           onPressed: () {
                             Navigator.pushNamed(
-                              context,
-                              "/simulador-investimentos",
+                              context, "/simulador-investimentos",
                             );
                           },
-                          icon: Icon(Icons.add, size: 30),
+                          icon: const Icon(Icons.add, size: 30),
                           color: Colors.blue.shade700,
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    
+                    const SizedBox(height: 20),
+
                     Container(
-                      padding: EdgeInsets.all(40),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(40),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -363,7 +367,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                             size: 64,
                             color: Colors.grey.shade400,
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
                             "Nenhum investimento cadastrado",
                             style: TextStyle(
@@ -371,7 +375,7 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                               color: Colors.grey.shade600,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             "Clique no + para simular um investimento",
                             style: TextStyle(
@@ -379,18 +383,17 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                               color: Colors.grey.shade500,
                             ),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(
-                                context,
-                                "/simulador-investimentos",
+                                context, "/simulador-investimentos",
                               );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue.shade700,
                             ),
-                            child: Text(
+                            child: const Text(
                               'Fazer simulação',
                               style: TextStyle(color: Colors.white),
                             ),
@@ -404,23 +407,22 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
             }
 
             final docs = snapshot.data!.docs;
-            
-            // Calcular totais
+
             final totalInvestido = _calcularTotalInvestido(docs);
             final rendimentoTotal = _calcularRendimentoTotal(docs);
-            final percentualRendimento = _calcularPercentualRendimento(totalInvestido, rendimentoTotal);
+            final percentualRendimento =
+                _calcularPercentualRendimento(totalInvestido, rendimentoTotal);
 
             return SingleChildScrollView(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// TOPO
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Meus Investimentos",
+                      const Text(
+                        "Minhas simulações",
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
@@ -429,30 +431,28 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                       IconButton(
                         onPressed: () {
                           Navigator.pushNamed(
-                            context,
-                            "/simulador-investimentos",
+                            context, "/simulador-investimentos",
                           );
                         },
-                        icon: Icon(Icons.add, size: 30),
+                        icon: const Icon(Icons.add, size: 30),
                         color: Colors.blue.shade700,
                       ),
                     ],
                   ),
 
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                  /// CARD TOTAL
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          rendimentoTotal >= 0 
-                              ? Colors.blue.shade700 
+                          rendimentoTotal >= 0
+                              ? Colors.blue.shade700
                               : Colors.red.shade700,
-                          rendimentoTotal >= 0 
-                              ? Colors.blue.shade500 
+                          rendimentoTotal >= 0
+                              ? Colors.blue.shade500
                               : Colors.red.shade500,
                         ],
                       ),
@@ -461,37 +461,37 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Total Investido",
+                        const Text(
+                          "Total simulado",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           "R\$ ${totalInvestido.toStringAsFixed(2)}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 34,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           "Rendimento total",
                           style: TextStyle(color: Colors.white70),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           rendimentoTotal >= 0
                               ? '+ R\$ ${rendimentoTotal.toStringAsFixed(2)} (${percentualRendimento.toStringAsFixed(2)}%)'
                               : '- R\$ ${rendimentoTotal.abs().toStringAsFixed(2)} (${percentualRendimento.abs().toStringAsFixed(2)}%)',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 20),
-                        Align(
+                        const SizedBox(height: 20),
+                        const Align(
                           alignment: Alignment.centerRight,
                           child: Icon(
                             Icons.show_chart,
@@ -503,9 +503,8 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                     ),
                   ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                  /// LISTA DE INVESTIMENTOS
                   Text(
                     "${docs.length} ${docs.length == 1 ? 'investimento' : 'investimentos'}",
                     style: TextStyle(
@@ -513,17 +512,25 @@ class _TelaInvestimentos extends State<TelaInvestimentos> {
                       fontSize: 14,
                     ),
                   ),
-                  SizedBox(height: 16),
-                  ...docs.map((doc) => itemInvestimento(doc)).toList(),
+                  const SizedBox(height: 16),
 
-                  SizedBox(height: 20),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      return itemInvestimento(docs[index]);
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             );
           },
         ),
       ),
-      bottomNavigationBar: BottomNavWidget(paginaAtual: 2),
+      bottomNavigationBar: const BottomNavWidget(paginaAtual: 2),
     );
   }
 }

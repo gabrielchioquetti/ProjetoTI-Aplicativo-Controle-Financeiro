@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_projeto_ti/models/investimento.dart';
 
 class TelaResultadoSimulacao extends StatelessWidget {
+  const TelaResultadoSimulacao({super.key});
+
   @override
   Widget build(BuildContext context) {
     final investimento =
@@ -13,25 +16,29 @@ class TelaResultadoSimulacao extends StatelessWidget {
         backgroundColor: Colors.grey.shade100,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Resultado da Simulação",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// CARD PRINCIPAL
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    investimento.temLucro ? Colors.green.shade700 : Colors.red.shade700,
-                    investimento.temLucro ? Colors.green.shade500 : Colors.red.shade500,
+                    investimento.temLucro
+                        ? Colors.green.shade700
+                        : Colors.red.shade700,
+                    investimento.temLucro
+                        ? Colors.green.shade500
+                        : Colors.red.shade500,
                   ],
                 ),
                 borderRadius: BorderRadius.circular(24),
@@ -42,19 +49,20 @@ class TelaResultadoSimulacao extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Valor final estimado",
                         style: TextStyle(color: Colors.white70),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           investimento.tipo,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -63,10 +71,10 @@ class TelaResultadoSimulacao extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "R\$ ${investimento.valorFinalLiquido.toStringAsFixed(2)}",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
@@ -75,22 +83,23 @@ class TelaResultadoSimulacao extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     "Em ${investimento.prazoFormatado}",
-                    style: TextStyle(color: Colors.white70),
+                    style: const TextStyle(color: Colors.white70),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Lucro Líquido",
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                           Text(
                             "R\$ ${investimento.lucroLiquido.toStringAsFixed(2)}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -101,13 +110,14 @@ class TelaResultadoSimulacao extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
+                          const Text(
                             "Rendimento",
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                           Text(
                             investimento.rendimentoFormatado,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -115,7 +125,7 @@ class TelaResultadoSimulacao extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Icon(
+                      const Icon(
                         Icons.show_chart,
                         color: Colors.white,
                         size: 40,
@@ -126,11 +136,11 @@ class TelaResultadoSimulacao extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             /// RESUMO
             Container(
-              padding: EdgeInsets.all(18),
+              padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18),
@@ -138,29 +148,35 @@ class TelaResultadoSimulacao extends StatelessWidget {
               child: Column(
                 children: [
                   itemResumo("Tipo de Investimento", investimento.tipo),
-                  itemResumo("Valor Inicial", "R\$ ${investimento.valorInicial.toStringAsFixed(2)}"),
-                  itemResumo("Aporte Mensal", "R\$ ${investimento.aporteMensal.toStringAsFixed(2)}"),
-                  itemResumo("Total Aportado", "R\$ ${investimento.totalAportes.toStringAsFixed(2)}"),
-                  itemResumo("Valor Final Bruto", "R\$ ${investimento.valorFinalBruto.toStringAsFixed(2)}"),
-                  itemResumo("Imposto de Renda", "R\$ ${investimento.impostoPago.toStringAsFixed(2)} (${investimento.aliquotaIR.toStringAsFixed(1)}%)"),
-                  itemResumo("Taxa de Juros", "${investimento.taxaJurosAnual.toStringAsFixed(2)}% a.a."),
+                  itemResumo("Valor Inicial",
+                      "R\$ ${investimento.valorInicial.toStringAsFixed(2)}"),
+                  itemResumo("Aporte Mensal",
+                      "R\$ ${investimento.aporteMensal.toStringAsFixed(2)}"),
+                  itemResumo("Total Aportado",
+                      "R\$ ${investimento.totalAportes.toStringAsFixed(2)}"),
+                  itemResumo("Valor Final Bruto",
+                      "R\$ ${investimento.valorFinalBruto.toStringAsFixed(2)}"),
+                  itemResumo("Imposto de Renda",
+                      "R\$ ${investimento.impostoPago.toStringAsFixed(2)} (${investimento.aliquotaIR.toStringAsFixed(1)}%)"),
+                  itemResumo("Taxa de Juros",
+                      "${investimento.taxaJurosAnual.toStringAsFixed(2)}% a.a."),
                 ],
               ),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-            /// GRÁFICO DE EVOLUÇÃO
-            Text(
+            const Text(
               "Evolução do Investimento",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             Container(
-              height: 250,
+              height: 260,
               width: double.infinity,
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.only(
+                  top: 20, bottom: 10, left: 10, right: 20),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18),
@@ -168,7 +184,7 @@ class TelaResultadoSimulacao extends StatelessWidget {
               child: _buildGraficoEvolucao(investimento),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             /// BOTÕES DE AÇÃO
             Row(
@@ -179,15 +195,15 @@ class TelaResultadoSimulacao extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text('Nova Simulação'),
+                    child: const Text('Nova Simulação'),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
@@ -195,12 +211,12 @@ class TelaResultadoSimulacao extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade700,
-                      padding: EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Voltar ao Início',
                       style: TextStyle(color: Colors.white),
                     ),
@@ -216,7 +232,7 @@ class TelaResultadoSimulacao extends StatelessWidget {
 
   Widget itemResumo(String titulo, String valor) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -229,7 +245,7 @@ class TelaResultadoSimulacao extends StatelessWidget {
           ),
           Text(
             valor,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
@@ -239,9 +255,7 @@ class TelaResultadoSimulacao extends StatelessWidget {
     );
   }
 
-  // Widget do gráfico de evolução
   Widget _buildGraficoEvolucao(Investimento investimento) {
-    // Gerar dados de evolução mês a mês
     List<double> evolucao = _calcularEvolucao(
       valorInicial: investimento.valorInicial,
       aporteMensal: investimento.aporteMensal,
@@ -249,155 +263,117 @@ class TelaResultadoSimulacao extends StatelessWidget {
       taxaJurosAnual: investimento.taxaJurosAnual,
     );
 
-    // Encontrar o maior valor para escala
-    double maiorValor = evolucao.reduce((a, b) => a > b ? a : b);
-    if (maiorValor == 0) maiorValor = 1;
-
-    // Selecionar pontos para mostrar no gráfico (máximo 12)
-    List<double> pontosMostrar = [];
-    int totalPontos = evolucao.length;
-    if (totalPontos <= 12) {
-      pontosMostrar = evolucao;
-    } else {
-      int passo = (totalPontos / 12).ceil();
-      for (int i = 0; i < totalPontos; i += passo) {
-        pontosMostrar.add(evolucao[i]);
-      }
-      // Garantir que o último ponto está incluído
-      if (pontosMostrar.last != evolucao.last) {
-        pontosMostrar.add(evolucao.last);
-      }
+    // 1. Agora passamos TODOS os meses para o gráfico. Sem filtros manuais!
+    List<FlSpot> spots = [];
+    for (int i = 0; i < evolucao.length; i++) {
+      spots.add(FlSpot(i.toDouble(), evolucao[i]));
     }
 
-    // Calcular altura máxima do gráfico (com margem)
-    double alturaMaxima = maiorValor * 1.2;
+    // 2. Calculamos dinamicamente de quanto em quanto tempo a legenda deve aparecer
+    // Se forem muitos meses (ex: 48 meses), mostra de 6 em 6 ou 12 em 12.
+    double intervaloLegenda = (evolucao.length / 5).ceilToDouble();
+    if (intervaloLegenda < 1) intervaloLegenda = 1;
 
-    return Column(
-      children: [
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(pontosMostrar.length, (index) {
-              double altura = (pontosMostrar[index] / alturaMaxima) * 180;
-              String label = '';
-              if (pontosMostrar.length <= 12) {
-                label = '${index + 1}';
-              } else {
-                int mesReal = (index * (totalPontos / pontosMostrar.length)).round();
-                label = mesReal.toString();
-              }
-              
-              // Cor da barra baseada no valor atual vs valor inicial
-              double corPercentual = pontosMostrar[index] / investimento.valorFinalLiquido;
-              Color corBarra = Colors.blue.shade700;
-              if (pontosMostrar[index] < investimento.valorInicial) {
-                corBarra = Colors.orange.shade700;
-              } else if (pontosMostrar[index] >= investimento.valorInicial * 1.5) {
-                corBarra = Colors.green.shade700;
-              }
+    final corLinha =
+        investimento.temLucro ? Colors.green.shade600 : Colors.blue.shade600;
 
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Valor no topo da barra (opcional)
-                  if (index % 3 == 0 || index == pontosMostrar.length - 1)
-                    Text(
-                      'R\$ ${pontosMostrar[index].toInt()}',
-                      style: TextStyle(fontSize: 8, color: Colors.grey.shade600),
-                    ),
-                  SizedBox(height: 4),
-                  Container(
-                    width: 22,
-                    height: altura > 5 ? altura : 5,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          corBarra.withOpacity(0.7),
-                          corBarra,
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                      boxShadow: [
-                        BoxShadow(
-                          color: corBarra.withOpacity(0.3),
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              );
-            }),
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: Colors.grey.shade100,
+            strokeWidth: 1,
           ),
         ),
-        SizedBox(height: 8),
-        // Legenda
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Mês',
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey.shade500,
+        titlesData: FlTitlesData(
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 50,
+              getTitlesWidget: (value, meta) {
+                if (value == meta.max || value == meta.min) {
+                  return const SizedBox();
+                }
+                String valorFormatado = value >= 1000
+                    ? '${(value / 1000).toStringAsFixed(0)}k'
+                    : value.toStringAsFixed(0);
+                return Text(
+                  'R\$ $valorFormatado',
+                  style: TextStyle(color: Colors.grey.shade500, fontSize: 10),
+                );
+              },
+            ),
+          ),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 24,
+              // A MÁGICA ESTÁ AQUI: O fl_chart controla o espaçamento e não repete números!
+              interval: intervaloLegenda,
+              getTitlesWidget: (value, meta) {
+                // Evita mostrar números além do prazo final real
+                if (value > investimento.prazoMeses) return const SizedBox();
+
+                return Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                    'Mês ${value.toInt()}',
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 10),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        borderData: FlBorderData(show: false),
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            tooltipBgColor: Colors.grey.shade900,
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map((spot) {
+                return LineTooltipItem(
+                  'Mês ${spot.x.toInt()}\nR\$ ${spot.y.toStringAsFixed(2)}',
+                  const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11),
+                );
+              }).toList();
+            },
+          ),
+        ),
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            curveSmoothness: 0.15, // Suavizado leve para prazos menores
+            color: corLinha,
+            barWidth: 3,
+            isStrokeCapRound: true,
+            dotData: const FlDotData(show: false),
+            belowBarData: BarAreaData(
+              show: true,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  corLinha.withValues(alpha: 0.2),
+                  corLinha.withValues(alpha: 0.0),
+                ],
               ),
             ),
-            Row(
-              children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade700,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                SizedBox(width: 4),
-                Text(
-                  'Evolução',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
-                  ),
-                ),
-                SizedBox(width: 12),
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade700,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                SizedBox(width: 4),
-                Text(
-                  'Lucro',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey.shade500,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
-  // Calcular evolução mês a mês
   List<double> _calcularEvolucao({
     required double valorInicial,
     required double aporteMensal,

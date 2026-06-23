@@ -1,4 +1,3 @@
-// lib/services/investimento_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_projeto_ti/models/investimento.dart';
@@ -7,11 +6,11 @@ class InvestimentoService {
   // Salvar investimento no Firestore
   static Future<void> salvar(Investimento investimento) async {
     final usuario = FirebaseAuth.instance.currentUser;
-    
+
     if (usuario == null) {
       throw Exception("Usuário não logado");
     }
-    
+
     await FirebaseFirestore.instance.collection("investimentos").add({
       "uidUsuario": usuario.uid,
       "tipo": investimento.tipo,
@@ -35,11 +34,11 @@ class InvestimentoService {
   // Listar investimentos do usuário
   static Stream<QuerySnapshot> listar() {
     final usuario = FirebaseAuth.instance.currentUser;
-    
+
     if (usuario == null) {
       return Stream.error("Usuário não logado");
     }
-    
+
     return FirebaseFirestore.instance
         .collection("investimentos")
         .where("uidUsuario", isEqualTo: usuario.uid)
@@ -50,11 +49,11 @@ class InvestimentoService {
   // Excluir investimento
   static Future<void> excluir(String id) async {
     final usuario = FirebaseAuth.instance.currentUser;
-    
+
     if (usuario == null) {
       throw Exception("Usuário não logado");
     }
-    
+
     await FirebaseFirestore.instance
         .collection("investimentos")
         .doc(id)
@@ -64,26 +63,26 @@ class InvestimentoService {
   // Buscar investimento por ID
   static Future<Investimento> buscarPorId(String id) async {
     final usuario = FirebaseAuth.instance.currentUser;
-    
+
     if (usuario == null) {
       throw Exception("Usuário não logado");
     }
-    
+
     final doc = await FirebaseFirestore.instance
         .collection("investimentos")
         .doc(id)
         .get();
-    
+
     if (!doc.exists) {
       throw Exception("Investimento não encontrado");
     }
-    
+
     final dados = doc.data() as Map<String, dynamic>;
-    
+
     // Converter Timestamp para DateTime
     final timestamp = dados['dataSimulacao'] as Timestamp;
     dados['dataSimulacao'] = timestamp.toDate().toIso8601String();
-    
+
     return Investimento.fromJson(dados);
   }
 }

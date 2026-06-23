@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projeto_ti/services/investimento_api_service.dart';
-import 'package:flutter_projeto_ti/models/investimento.dart';
 import 'package:flutter_projeto_ti/services/investimento_service.dart';
 
 class TelaSimuladorInvestimentos extends StatefulWidget {
+  const TelaSimuladorInvestimentos({super.key});
+
   @override
-  State<TelaSimuladorInvestimentos> createState() =>
-      _TelaSimuladorInvestimentosState();
+  State<TelaSimuladorInvestimentos> createState() => _TelaSimuladorInvestimentosState();
 }
 
-class _TelaSimuladorInvestimentosState
-    extends State<TelaSimuladorInvestimentos> {
+class _TelaSimuladorInvestimentosState extends State<TelaSimuladorInvestimentos> {
   final TextEditingController valorInicialController = TextEditingController();
   final TextEditingController aporteMensalController = TextEditingController();
   final TextEditingController percentualCdiController = TextEditingController();
@@ -25,7 +24,8 @@ class _TelaSimuladorInvestimentosState
   List<String> _tiposInvestimento = [];
   Map<String, double> _taxas = {};
 
-  final List<String> _opcoesCdi = List.generate(21, (index) => '${100 + index}%');
+  final List<String> _opcoesCdi =
+      List.generate(21, (index) => '${100 + index}%');
   String? _percentualCdiCustom;
 
   @override
@@ -48,7 +48,6 @@ class _TelaSimuladorInvestimentosState
       });
     } catch (e) {
       setState(() => _carregando = false);
-      print('Erro ao carregar dados: $e');
     }
   }
 
@@ -58,7 +57,7 @@ class _TelaSimuladorInvestimentosState
       double percentual = double.tryParse(valor.replaceAll(',', '.')) ?? 100;
       return percentual / 100;
     }
-    
+
     String valor = percentualCdiController.text.replaceAll('%', '').trim();
     if (valor.isEmpty) return 1.0;
     double percentual = double.tryParse(valor.replaceAll(',', '.')) ?? 100;
@@ -67,9 +66,8 @@ class _TelaSimuladorInvestimentosState
 
   double _getTaxaRendimento() {
     if (tipoTaxaSelecionado == 'manual') {
-      double taxa = double.tryParse(
-        taxaManualController.text.replaceAll(',', '.')
-      ) ?? 0;
+      double taxa =
+          double.tryParse(taxaManualController.text.replaceAll(',', '.')) ?? 0;
       return taxa;
     } else {
       double taxaBase = _taxas[investimentoSelecionado] ?? 10.0;
@@ -119,19 +117,14 @@ class _TelaSimuladorInvestimentosState
 
     double taxa = _getTaxaRendimento();
     if (taxa <= 0) {
-      _mostrarErro(tipoTaxaSelecionado == 'manual' 
-          ? 'Digite uma taxa válida (ex: 10.5)' 
+      _mostrarErro(tipoTaxaSelecionado == 'manual'
+          ? 'Digite uma taxa válida (ex: 10.5)'
           : 'Digite um percentual do CDI válido (ex: 100, 105, 120)');
       return;
     }
 
-    double valorInicial = double.tryParse(
-      valorInicialController.text.replaceAll(',', '.').replaceAll('R\$', '').trim(),
-    ) ?? 0;
-
-    double aporteMensal = double.tryParse(
-      aporteMensalController.text.replaceAll(',', '.').replaceAll('R\$', '').trim(),
-    ) ?? 0;
+    double valorInicial = double.tryParse(valorInicialController.text .replaceAll(',', '.') .replaceAll('R\$', '') .trim(),) ?? 0;
+    double aporteMensal = double.tryParse(aporteMensalController.text .replaceAll(',', '.') .replaceAll('R\$', '') .trim(),) ?? 0;
 
     if (valorInicial <= 0) {
       _mostrarErro('Digite um valor inicial válido');
@@ -159,11 +152,10 @@ class _TelaSimuladorInvestimentosState
       // SALVAR NO FIRESTORE
       try {
         await InvestimentoService.salvar(resultado);
-        print('Investimento salvo no Firestore!');
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Simulação salva com sucesso!'),
               backgroundColor: Colors.green,
               behavior: SnackBarBehavior.floating,
@@ -171,7 +163,6 @@ class _TelaSimuladorInvestimentosState
           );
         }
       } catch (e) {
-        print('Erro ao salvar investimento: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -183,7 +174,6 @@ class _TelaSimuladorInvestimentosState
         }
       }
 
-      // Navegar para tela de resultado
       if (mounted) {
         Navigator.pushNamed(
           context,
@@ -220,7 +210,7 @@ class _TelaSimuladorInvestimentosState
         backgroundColor: Colors.grey.shade100,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Simulador de Investimentos",
           style: TextStyle(
             color: Colors.black,
@@ -230,7 +220,7 @@ class _TelaSimuladorInvestimentosState
         ),
       ),
       body: _carregando
-          ? Center(
+          ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -242,13 +232,13 @@ class _TelaSimuladorInvestimentosState
             )
           : SafeArea(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         blurRadius: 10,
@@ -267,14 +257,15 @@ class _TelaSimuladorInvestimentosState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
-                        value: investimentoSelecionado,
+                        initialValue:
+                            investimentoSelecionado, // Atualizado de value -> initialValue
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
@@ -285,11 +276,11 @@ class _TelaSimuladorInvestimentosState
                             child: Row(
                               children: [
                                 Text(item),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 if (_taxas.containsKey(item))
                                   Text(
                                     '(${_taxas[item]?.toStringAsFixed(2) ?? 0}% a.a.)',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,
                                     ),
@@ -304,18 +295,18 @@ class _TelaSimuladorInvestimentosState
                           });
                         },
                       ),
-
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.blue.shade50,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.info_outline, color: Colors.blue.shade700, size: 18),
-                            SizedBox(width: 8),
+                            Icon(Icons.info_outline,
+                                color: Colors.blue.shade700, size: 18),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 _getInfoInvestimento(),
@@ -328,10 +319,7 @@ class _TelaSimuladorInvestimentosState
                           ],
                         ),
                       ),
-
-                      SizedBox(height: 20),
-
-                      /// VALOR INICIAL
+                      const SizedBox(height: 20),
                       Text(
                         "Valor Inicial",
                         style: TextStyle(
@@ -339,26 +327,25 @@ class _TelaSimuladorInvestimentosState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextField(
                         controller: valorInicialController,
-                        keyboardType: TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         decoration: InputDecoration(
                           hintText: "R\$ 1.000,00",
-                          prefixIcon: Icon(Icons.attach_money, color: Colors.grey.shade600),
+                          prefixIcon: Icon(Icons.attach_money,
+                              color: Colors.grey.shade600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
                         ),
                       ),
-
-                      SizedBox(height: 20),
-
-                      /// APORTE MENSAL
+                      const SizedBox(height: 20),
                       Text(
                         "Aporte Mensal",
                         style: TextStyle(
@@ -366,26 +353,25 @@ class _TelaSimuladorInvestimentosState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       TextField(
                         controller: aporteMensalController,
-                        keyboardType: TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         decoration: InputDecoration(
                           hintText: "R\$ 200,00",
-                          prefixIcon: Icon(Icons.repeat, color: Colors.grey.shade600),
+                          prefixIcon:
+                              Icon(Icons.repeat, color: Colors.grey.shade600),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
                         ),
                       ),
-
-                      SizedBox(height: 20),
-
-                      /// TIPO DE TAXA
+                      const SizedBox(height: 20),
                       Text(
                         "Definir Taxa",
                         style: TextStyle(
@@ -393,10 +379,9 @@ class _TelaSimuladorInvestimentosState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      
+                      const SizedBox(height: 8),
                       Container(
-                        padding: EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(12),
@@ -411,18 +396,21 @@ class _TelaSimuladorInvestimentosState
                                   });
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: tipoTaxaSelecionado == 'percentual_cdi'
-                                        ? Colors.blue.shade700
-                                        : Colors.transparent,
+                                    color:
+                                        tipoTaxaSelecionado == 'percentual_cdi'
+                                            ? Colors.blue.shade700
+                                            : Colors.transparent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Center(
                                     child: Text(
                                       'Percentual do CDI',
                                       style: TextStyle(
-                                        color: tipoTaxaSelecionado == 'percentual_cdi'
+                                        color: tipoTaxaSelecionado ==
+                                                'percentual_cdi'
                                             ? Colors.white
                                             : Colors.grey.shade700,
                                         fontWeight: FontWeight.bold,
@@ -440,7 +428,8 @@ class _TelaSimuladorInvestimentosState
                                   });
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
                                     color: tipoTaxaSelecionado == 'manual'
                                         ? Colors.blue.shade700
@@ -464,10 +453,7 @@ class _TelaSimuladorInvestimentosState
                           ],
                         ),
                       ),
-
-                      SizedBox(height: 16),
-
-                      /// CAMPO DE TAXA (dinâmico)
+                      const SizedBox(height: 16),
                       if (tipoTaxaSelecionado == 'percentual_cdi') ...[
                         Text(
                           "Percentual do CDI",
@@ -476,36 +462,37 @@ class _TelaSimuladorInvestimentosState
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        
-                        Container(
+                        const SizedBox(height: 8),
+                        SizedBox(
                           height: 80,
                           child: Wrap(
                             spacing: 6,
                             runSpacing: 6,
                             children: _opcoesCdi.map((opcao) {
                               bool isSelected = _percentualCdiCustom == opcao ||
-                                  (percentualCdiController.text == opcao.replaceAll('%', '') &&
-                                      _percentualCdiCustom == null);
-                              
+                                  (percentualCdiController.text == opcao.replaceAll('%', '') && _percentualCdiCustom == null);
                               return GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    _percentualCdiCustom = opcao;
-                                    percentualCdiController.text = opcao.replaceAll('%', '');
-                                  });
+                                  setState(() {_percentualCdiCustom = opcao; percentualCdiController.text = opcao.replaceAll('%', '');});
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: isSelected ? Colors.blue.shade700 : Colors.grey.shade200,
+                                    color: isSelected
+                                        ? Colors.blue.shade700
+                                        : Colors.grey.shade200,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
                                     opcao,
                                     style: TextStyle(
-                                      color: isSelected ? Colors.white : Colors.grey.shade700,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -514,9 +501,7 @@ class _TelaSimuladorInvestimentosState
                             }).toList(),
                           ),
                         ),
-                        
-                        SizedBox(height: 12),
-                        
+                        const SizedBox(height: 12),
                         Row(
                           children: [
                             Expanded(
@@ -534,16 +519,16 @@ class _TelaSimuladorInvestimentosState
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 8,
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Container(
-                              padding: EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 color: Colors.blue.shade50,
                                 borderRadius: BorderRadius.circular(12),
@@ -579,29 +564,31 @@ class _TelaSimuladorInvestimentosState
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         TextField(
                           controller: taxaManualController,
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           decoration: InputDecoration(
                             hintText: "Ex: 10.5",
                             suffixText: "% a.a.",
-                            prefixIcon: Icon(Icons.percent, color: Colors.grey.shade600),
+                            prefixIcon: Icon(Icons.percent,
+                                color: Colors.grey.shade600),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 8,
                             ),
                           ),
                         ),
                       ],
-                      
+
                       if (_getTaxaRendimento() > 0) ...[
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         Container(
-                          padding: EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.green.shade50,
                             borderRadius: BorderRadius.circular(12),
@@ -609,8 +596,9 @@ class _TelaSimuladorInvestimentosState
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.trending_up, color: Colors.green.shade700),
-                              SizedBox(width: 8),
+                              Icon(Icons.trending_up,
+                                  color: Colors.green.shade700),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   'Taxa calculada: ${_getTaxaRendimento().toStringAsFixed(2)}% a.a.',
@@ -624,10 +612,7 @@ class _TelaSimuladorInvestimentosState
                           ),
                         ),
                       ],
-
-                      SizedBox(height: 20),
-
-                      /// TEMPO
+                      const SizedBox(height: 20),
                       Text(
                         "Tempo de investimento",
                         style: TextStyle(
@@ -635,19 +620,26 @@ class _TelaSimuladorInvestimentosState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
-                        value: tempoSelecionado,
+                        initialValue:
+                            tempoSelecionado, // Atualizado de value -> initialValue
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,
                           ),
                         ),
-                        items: ["12 meses", "24 meses", "36 meses", "60 meses", "120 meses"].map((
+                        items: [
+                          "12 meses",
+                          "24 meses",
+                          "36 meses",
+                          "60 meses",
+                          "120 meses"
+                        ].map((
                           item,
                         ) {
                           return DropdownMenuItem(
@@ -661,10 +653,7 @@ class _TelaSimuladorInvestimentosState
                           });
                         },
                       ),
-
-                      SizedBox(height: 30),
-
-                      /// BOTÃO
+                      const SizedBox(height: 30),
                       SizedBox(
                         width: double.infinity,
                         height: 55,
@@ -677,10 +666,10 @@ class _TelaSimuladorInvestimentosState
                           ),
                           onPressed: _simulando ? null : _simular,
                           child: _simulando
-                              ? CircularProgressIndicator(
+                              ? const CircularProgressIndicator(
                                   color: Colors.white,
                                 )
-                              : Text(
+                              : const Text(
                                   "Calcular e Salvar",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -697,7 +686,6 @@ class _TelaSimuladorInvestimentosState
             ),
     );
   }
-
   @override
   void dispose() {
     valorInicialController.dispose();

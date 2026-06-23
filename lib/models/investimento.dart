@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Investimento {
   final String id;
   final String tipo;
@@ -120,10 +122,12 @@ class Investimento {
     }
   }
 
-  String get valorFinalFormatado => 'R\$ ${valorFinalLiquido.toStringAsFixed(2)}';
+  String get valorFinalFormatado =>
+      'R\$ ${valorFinalLiquido.toStringAsFixed(2)}';
   String get lucroFormatado => 'R\$ ${lucroLiquido.toStringAsFixed(2)}';
-  String get rendimentoFormatado => '${rendimentoPercentual.toStringAsFixed(2)}%';
-  
+  String get rendimentoFormatado =>
+      '${rendimentoPercentual.toStringAsFixed(2)}%';
+
   bool get temLucro => lucroLiquido > 0;
   Color get corLucro => temLucro ? Colors.green : Colors.red;
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
 
 class TelaPerfil extends StatefulWidget {
+  const TelaPerfil ({super.key});
   @override
   State<TelaPerfil> createState() => _TelaPerfil();
 }

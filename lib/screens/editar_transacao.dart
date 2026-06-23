@@ -1,10 +1,9 @@
-// screens/tela_editar_transacao.dart
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_projeto_ti/services/transacao_service.dart';
 import 'package:flutter_projeto_ti/utils/categorias.dart';
 
 class TelaEditarTransacao extends StatefulWidget {
+  const TelaEditarTransacao({super.key});
   @override
   State<TelaEditarTransacao> createState() => _TelaEditarTransacaoState();
 }
@@ -244,7 +243,7 @@ class _TelaEditarTransacaoState extends State<TelaEditarTransacao> {
 
               // Dropdown Categoria
               DropdownButtonFormField<String>(
-                value: _categoriaSelecionada,
+                initialValue: _categoriaSelecionada,
                 decoration: InputDecoration(
                   labelText: "Categoria",
                   prefixIcon: Icon(Icons.category, color: Colors.blue),

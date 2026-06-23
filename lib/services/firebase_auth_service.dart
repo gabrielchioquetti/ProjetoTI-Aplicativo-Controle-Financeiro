@@ -26,7 +26,6 @@ class FirebaseAuthService {
 
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -42,7 +41,6 @@ class FirebaseAuthService {
       );
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }

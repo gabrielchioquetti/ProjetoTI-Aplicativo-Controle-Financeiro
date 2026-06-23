@@ -3,6 +3,7 @@ import 'package:flutter_projeto_ti/controllers/auth_controller.dart';
 import 'package:flutter_projeto_ti/services/firebase_auth_service.dart';
 
 class TelaCadastro extends StatefulWidget {
+  const TelaCadastro({super.key});
   @override
   State<TelaCadastro> createState() => _TelaCadastro();
 }
@@ -186,25 +187,27 @@ class _TelaCadastro extends State<TelaCadastro> {
                               senha: senha,
                             );
 
+                            if (!context.mounted) return;
+
                             if (sucesso) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Cadastro realizado com sucesso"),
+                                const SnackBar(
+                                  content:
+                                      Text("Cadastro realizado com sucesso"),
                                   backgroundColor: Colors.green,
                                 ),
                               );
-
                               Navigator.pop(context, true);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   content: Text("Erro ao cadastrar usuário"),
                                   backgroundColor: Colors.red,
                                 ),
                               );
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             "Cadastrar",
                             style: TextStyle(
                               color: Colors.white,

@@ -1,12 +1,48 @@
+// lib/services/investimento_api_service.dart
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter_projeto_ti/models/investimento.dart';
 
 class InvestimentoApiService {
-
+  // URL base da API do Banco Central para séries temporais
   static const String baseUrlBacen = 'https://api.bcb.gov.br';
 
+  // Busca a taxa SELIC META atualizada (Série 432 do SGS)
+  static Future<double> _obterSelicAtual() async {
+    // Data atual e data de 10 anos atrás (máximo permitido)
+    final now = DateTime.now();
+    final dezAnosAtras = DateTime(now.year - 10, now.month, now.day);
+
+    // Formatar datas no formato dd/mm/aaaa
+    String dataInicial = _formatarData(dezAnosAtras);
+    String dataFinal = _formatarData(now);
+
+    final url = Uri.parse('$baseUrlBacen/dados/serie/bcdata.sgs.432/dados' '?formato=json' '&dataInicial=$dataInicial' '&dataFinal=$dataFinal');
+    final response = await http.get(url,headers: {'Accept': 'application/json'},);
+
+    if (response.statusCode == 200) {
+      List<dynamic> dados = jsonDecode(response.body);
+      if (dados.isNotEmpty) {
+        // Pegar o último valor (mais recente)
+        var ultimo = dados.last;
+        String valorStr = ultimo['valor'].toString().replaceAll(',', '.');
+        double selic = double.parse(valorStr);
+        return selic;
+      }
+    }
+    // Fallback seguro
+    return 10.75;
+  }
+
+  // Formatar data para dd/mm/aaaa
+  static String _formatarData(DateTime data) {
+    return '${data.day.toString().padLeft(2, '0')}' '/${data.month.toString().padLeft(2, '0')}' '/${data.year}';
+  }
+
+  // Restante do código permanece igual...
+
+  // Método principal de simulação
   static Future<Investimento> simularInvestimento({
     required double valorInicial,
     required double aporteMensal,
@@ -15,44 +51,29 @@ class InvestimentoApiService {
     required String tipoInvestimento,
   }) async {
     try {
-
       double taxaSelic = await _obterSelicAtual();
       double taxaFinal = taxaJurosAnual;
       String tipo = tipoInvestimento.toLowerCase();
-      
-      print('Taxa SELIC obtida: $taxaSelic%');
-      print('Tipo de investimento: $tipo');
 
-      if (tipo == 'cdb') {
-        taxaFinal = taxaJurosAnual;
-      } 
-      else if (tipo == 'tesouro direto') {
-        taxaFinal = taxaJurosAnual;
-      } 
-      else if (tipo == 'lca' || tipo == 'lci') {
-        taxaFinal = taxaJurosAnual;
-      } 
-      else if (tipo == 'fundos de investimento' || tipo == 'fundos') {
-        taxaFinal = taxaJurosAnual;
-      } 
-      else if (tipo == 'ações' || tipo == 'acoes') {
-        taxaFinal = taxaJurosAnual > 0 ? taxaJurosAnual : 12.0;
-      } 
-      else if (tipo == 'poupança' || tipo == 'poupanca') {
+      // Regras de mercado baseadas na taxa Selic oficial obtida
+      if (tipo == 'poupança' || tipo == 'poupanca') {
         if (taxaSelic > 8.5) {
           taxaFinal = 6.17;
         } else {
           taxaFinal = 0.7 * taxaSelic;
         }
-      } 
-      else {
+      } else if (tipo == 'cdb') {
+        taxaFinal = taxaJurosAnual; // Já vem com o percentual aplicado
+      } else if (tipo == 'lca' || tipo == 'lci') {
+        taxaFinal = taxaJurosAnual;
+      } else if (tipo == 'tesouro direto') {
+        taxaFinal = taxaJurosAnual;
+      } else if (tipo == 'fundos de investimento' || tipo == 'fundos') {
         taxaFinal = taxaJurosAnual;
       }
-      
-      print('Taxa final aplicada: $taxaFinal%');
-      
-      double aliquotaIR = _calcularAliquotaIR(tipo, prazoMeses);
-      
+
+      double aliquotaIR = _calcularAliquotaIR(tipoInvestimento, prazoMeses);
+
       return _simularLocalmente(
         valorInicial: valorInicial,
         aporteMensal: aporteMensal,
@@ -61,9 +82,7 @@ class InvestimentoApiService {
         tipoInvestimento: tipoInvestimento,
         aliquotaIR: aliquotaIR,
       );
-      
     } catch (e) {
-      print('Erro no fluxo principal da API, usando parâmetros locais: $e');
       double aliquotaIR = _calcularAliquotaIR(tipoInvestimento, prazoMeses);
       return _simularLocalmente(
         valorInicial: valorInicial,
@@ -79,13 +98,17 @@ class InvestimentoApiService {
   static double _calcularAliquotaIR(String tipoInvestimento, int prazoMeses) {
     String tipo = tipoInvestimento.toLowerCase();
 
-    if (tipo == 'poupança' || tipo == 'poupanca' || 
-        tipo == 'lca' || tipo == 'lci') {
+    if (tipo == 'poupança' ||
+        tipo == 'poupanca' ||
+        tipo == 'lca' ||
+        tipo == 'lci') {
       return 0.0;
     }
-    
-    if (tipo == 'cdb' || tipo == 'tesouro direto' || 
-        tipo == 'fundos de investimento' || tipo == 'fundos') {
+
+    if (tipo == 'cdb' ||
+        tipo == 'tesouro direto' ||
+        tipo == 'fundos de investimento' ||
+        tipo == 'fundos') {
       int dias = prazoMeses * 30;
       if (dias <= 180) {
         return 0.225;
@@ -97,41 +120,8 @@ class InvestimentoApiService {
         return 0.15;
       }
     }
-    
+
     return 0.15;
-  }
-
-  static Future<double> _obterSelicAtual() async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrlBacen/dados/serie/bcdata.sgs.432/dados?formato=json'),
-        headers: {'Accept': 'application/json'},
-      );
-
-      print('Chamando API do BACEN...');
-      print('Status code: ${response.statusCode}');
-
-      if (response.statusCode == 200) {
-        List<dynamic> dados = jsonDecode(response.body);
-        if (dados.isNotEmpty) {
-          var ultimo = dados.last;
-          String valorStr = ultimo['valor'].toString().replaceAll(',', '.');
-          double selic = double.parse(valorStr);
-          print('SELIC Meta obtida via API: $selic% a.a.');
-          return selic;
-        } else {
-          print('Resposta da API vazia');
-        }
-      } else {
-        print('API retornou status: ${response.statusCode}');
-        print('Resposta: ${response.body}');
-      }
-    } catch (e) {
-      print('Erro na requisição ao BACEN: $e');
-    }
-    
-    print('Usando SELIC padrão: 10.75%');
-    return 10.75;
   }
 
   static Investimento _simularLocalmente({
@@ -142,12 +132,9 @@ class InvestimentoApiService {
     required String tipoInvestimento,
     required double aliquotaIR,
   }) {
-
     double taxaPercentualAnual = taxaJurosAnual / 100;
     double taxaMensal = pow(1 + taxaPercentualAnual, 1 / 12) - 1;
-    
-    print('📊 Taxa mensal efetiva: ${(taxaMensal * 100).toStringAsFixed(4)}%');
-    
+
     double valorFinalBruto = valorInicial;
     double totalAportes = valorInicial;
 
@@ -155,24 +142,13 @@ class InvestimentoApiService {
       valorFinalBruto = valorFinalBruto * (1 + taxaMensal);
       valorFinalBruto += aporteMensal;
       totalAportes += aporteMensal;
-      
-      if ((i + 1) % 12 == 0) {
-        print('Mês ${i + 1}: R\$ ${valorFinalBruto.toStringAsFixed(2)}');
-      }
     }
 
     double lucroBruto = valorFinalBruto - totalAportes;
-    
-    // Aplicar IR
     double impostoPago = lucroBruto * aliquotaIR;
     double valorFinalLiquido = valorFinalBruto - impostoPago;
     double lucroLiquido = valorFinalLiquido - totalAportes;
-    
-    print('Valor final bruto: R\$ ${valorFinalBruto.toStringAsFixed(2)}');
-    print('Valor final líquido: R\$ ${valorFinalLiquido.toStringAsFixed(2)}');
-    print('Alíquota IR: ${(aliquotaIR * 100).toStringAsFixed(1)}%');
-    print('Imposto pago: R\$ ${impostoPago.toStringAsFixed(2)}');
-    
+
     return Investimento(
       tipo: tipoInvestimento,
       valorInicial: valorInicial,
@@ -186,7 +162,9 @@ class InvestimentoApiService {
       lucroLiquido: lucroLiquido,
       impostoPago: impostoPago,
       aliquotaIR: aliquotaIR * 100,
-      rendimentoPercentual: totalAportes > 0 ? ((valorFinalLiquido / totalAportes) - 1) * 100 : 0.0,
+      rendimentoPercentual: totalAportes > 0
+          ? ((valorFinalLiquido / totalAportes) - 1) * 100
+          : 0.0,
       dataSimulacao: DateTime.now(),
     );
   }
