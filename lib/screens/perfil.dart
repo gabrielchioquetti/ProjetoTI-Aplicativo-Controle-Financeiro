@@ -20,6 +20,17 @@ class _TelaPerfil extends State<TelaPerfil> {
 
   final User? usuarioAtual = FirebaseAuth.instance.currentUser;
 
+  @override
+  void initState() {
+    super.initState();
+    // Listener para mudanças no usuário
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
   Future<void> _alterarFoto(ImageSource fonte) async {
     try {
       final XFile? arquivoSelecionado = await _picker.pickImage(
@@ -66,7 +77,6 @@ class _TelaPerfil extends State<TelaPerfil> {
                   _alterarFoto(ImageSource.gallery);
                 },
               ),
-              // REMOVIDO O 'if (!kIsWeb)': Agora a opção sempre aparece
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: Colors.blue),
                 title: const Text("Tirar Nova Foto"),
@@ -122,27 +132,108 @@ class _TelaPerfil extends State<TelaPerfil> {
     );
   }
 
+  // Função para buscar foto do Firestore
+  Widget _buscarFotoDoFirestore() {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.exists) {
+          final dados = snapshot.data!.data() as Map<String, dynamic>;
+          final fotoUrl = dados['fotoUrl'] ?? '';
+
+          if (fotoUrl.isNotEmpty) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: Image.network(
+                fotoUrl,
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.person,
+                      size: 40, color: Colors.white);
+                },
+              ),
+            );
+          }
+        }
+        return const Icon(Icons.person, size: 40, color: Colors.white);
+      },
+    );
+  }
+
   Widget _construirImagemPerfil() {
-    if (kIsWeb && _imagemPerfilWeb != null) {
-      return Image.network(
-        _imagemPerfilWeb!,
-        width: 70,
-        height: 70,
-        fit: BoxFit.cover,
-      );
-    } else if (!kIsWeb && _imagemPerfilMobile != null) {
-      return Image.file(
-        _imagemPerfilMobile!,
-        width: 70,
-        height: 70,
-        fit: BoxFit.cover,
+    final user = FirebaseAuth.instance.currentUser;
+
+    // PRIORIDADE 1: Usar foto do usuário autenticado (Google)
+    if (user?.photoURL != null && user!.photoURL!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(35),
+        child: Image.network(
+          user.photoURL!,
+          width: 70,
+          height: 70,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return const CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 2,
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            // Se falhar, tenta buscar do Firestore
+            return _buscarFotoDoFirestore();
+          },
+        ),
       );
     }
-    return const Icon(
-      Icons.person,
-      size: 40,
-      color: Colors.white,
-    );
+
+    // PRIORIDADE 2: Foto selecionada manualmente (Web)
+    if (kIsWeb && _imagemPerfilWeb != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(35),
+        child: Image.network(
+          _imagemPerfilWeb!,
+          width: 70,
+          height: 70,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.person, size: 40, color: Colors.white);
+          },
+        ),
+      );
+    }
+
+    // PRIORIDADE 3: Foto selecionada manualmente (Mobile)
+    if (_imagemPerfilMobile != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(35),
+        child: Image.file(
+          _imagemPerfilMobile!,
+          width: 70,
+          height: 70,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    // PRIORIDADE 4: Ícone padrão
+    return const Icon(Icons.person, size: 40, color: Colors.white);
   }
 
   @override
@@ -164,14 +255,22 @@ class _TelaPerfil extends State<TelaPerfil> {
                     .get(),
                 builder: (context, snapshot) {
                   String nomeExibido = "Carregando...";
+                  String fotoUrl = "";
 
                   if (snapshot.hasData && snapshot.data!.exists) {
                     final dados = snapshot.data!.data() as Map<String, dynamic>;
                     nomeExibido = dados['nome'] ?? "Usuário";
+                    fotoUrl =
+                        dados['fotoUrl'] ?? ""; // Pega a foto do Firestore
                   } else if (snapshot.connectionState == ConnectionState.done) {
                     // Fallback se não achar o documento com o UID do usuário
                     nomeExibido = emailUsuario.split('@')[0];
                   }
+
+                  // PRIORIDADE: foto do Firestore, depois a do usuário atual
+                  String urlParaUsar = fotoUrl.isNotEmpty
+                      ? fotoUrl
+                      : (usuarioAtual?.photoURL ?? "");
 
                   return Container(
                     padding: const EdgeInsets.all(20),
@@ -187,10 +286,32 @@ class _TelaPerfil extends State<TelaPerfil> {
                           child: CircleAvatar(
                             radius: 35,
                             backgroundColor: Colors.blue.shade900,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(35),
-                              child: _construirImagemPerfil(),
-                            ),
+                            child: urlParaUsar.isNotEmpty
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(35),
+                                    child: Image.network(
+                                      urlParaUsar,
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(Icons.person,
+                                            size: 40, color: Colors.white);
+                                      },
+                                    ),
+                                  )
+                                : _construirImagemPerfil(),
                           ),
                         ),
                         const SizedBox(width: 16),

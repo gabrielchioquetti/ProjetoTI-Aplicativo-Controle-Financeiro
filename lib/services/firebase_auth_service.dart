@@ -23,6 +23,7 @@ class FirebaseAuthService {
         'nome': nome,
         'email': email,
         'dataCadastro': Timestamp.now(),
+        'fotoUrl': '', // Adicionado campo fotoUrl
       });
 
       return true;
@@ -67,7 +68,7 @@ class FirebaseAuthService {
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
 
-      // --- SALVANDO OS DADOS NO FIRESTORE ---
+      // SALVANDO OS DADOS NO FIRESTORE
       if (userCredential.user != null) {
         final user = userCredential.user!;
         final docRef =
@@ -80,8 +81,14 @@ class FirebaseAuthService {
           await docRef.set({
             'nome': user.displayName ?? "Usuário Google",
             'email': user.email ?? "",
-            'fotoUrl': user.photoURL ?? "",
+            'fotoUrl': user.photoURL ?? "", // SALVA A URL DA FOTO
             'dataCadastro': Timestamp.now(),
+          });
+        } else {
+          // ATUALIZA A FOTO CASO O USUÁRIO JÁ EXISTA
+          await docRef.update({
+            'fotoUrl': user.photoURL ?? "",
+            'nome': user.displayName ?? "Usuário Google",
           });
         }
       }
