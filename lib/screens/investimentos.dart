@@ -86,7 +86,7 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -94,7 +94,6 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
       ),
       child: GestureDetector(
         onTap: () {
-          // Navegar para detalhes do investimento
           Navigator.pushNamed(
             context,
             '/resultado-simulacao',
@@ -102,7 +101,6 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
           );
         },
         onLongPress: () {
-          // Long press para excluir
           _confirmarExclusao(id, investimento.tipo);
         },
         child: Row(
@@ -110,7 +108,7 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: corIcone.withOpacity(0.1),
+                color: corIcone.withValues(alpha: 0.1), 
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icone, color: corIcone, size: 24),
@@ -199,8 +197,8 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: investimento.temLucro
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.red.withOpacity(0.1),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -225,7 +223,7 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
   void _confirmarExclusao(String id, String tipo) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text(
             "Excluir investimento",
@@ -234,7 +232,7 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
           content: Text("Tem certeza que deseja excluir a simulação '$tipo'?"),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text(
                 "Cancelar",
                 style: TextStyle(color: Colors.grey),
@@ -242,10 +240,10 @@ class _TelaInvestimentosState extends State<TelaInvestimentos> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 try {
                   await InvestimentoService.excluir(id);
-                  if (!mounted) return;
+                  if (!mounted) return; 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Investimento excluído com sucesso!"),

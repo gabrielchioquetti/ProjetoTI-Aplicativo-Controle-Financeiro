@@ -4,6 +4,8 @@ import 'package:flutter_projeto_ti/utils/categorias.dart';
 import 'package:flutter_projeto_ti/widgets/bottom_nav.dart';
 
 class TelaNovaTransacao extends StatefulWidget {
+  const TelaNovaTransacao({super.key});
+
   @override
   State<TelaNovaTransacao> createState() => _TelaNovaTransacao();
 }
@@ -35,14 +37,14 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Nova Transação",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -110,7 +112,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 ],
               ),
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
 
             /// VALOR
             Text(
@@ -120,10 +122,11 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: valorController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 hintText: "R\$ 0,00",
                 prefixText: "R\$ ",
@@ -135,9 +138,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-
-            /// CATEGORIA COM ÍCONES
+            const SizedBox(height: 20),
             Text(
               "Categoria",
               style: TextStyle(
@@ -145,9 +146,9 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButtonFormField<String>(
-              value: categoriaSelecionada,
+              initialValue: categoriaSelecionada,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -156,14 +157,14 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              hint: Text("Selecionar categoria"),
+              hint: const Text("Selecionar categoria"),
               items: Categoria.todas.map((categoria) {
                 return DropdownMenuItem(
                   value: categoria.nome,
                   child: Row(
                     children: [
                       Icon(categoria.icone, size: 20, color: Colors.blue),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(categoria.nome),
                     ],
                   ),
@@ -181,7 +182,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 return null;
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             /// DESCRIÇÃO
             Text(
@@ -191,7 +192,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: descricaoController,
               decoration: InputDecoration(
@@ -204,7 +205,7 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             /// DATA
             Text(
@@ -214,13 +215,14 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: dataController,
               readOnly: true,
               decoration: InputDecoration(
                 hintText: "DD/MM/AAAA",
-                suffixIcon: Icon(Icons.calendar_today, color: Colors.blue),
+                suffixIcon:
+                    const Icon(Icons.calendar_today, color: Colors.blue),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -234,11 +236,11 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                   firstDate: DateTime(2020),
                   lastDate: DateTime.now(),
                   initialDate: DateTime.now(),
-                  locale: Locale('pt', 'BR'),
+                  locale: const Locale('pt', 'BR'),
                   builder: (context, child) {
                     return Theme(
                       data: Theme.of(context).copyWith(
-                        colorScheme: ColorScheme.light(
+                        colorScheme: const ColorScheme.light(
                           primary: Colors.blue,
                           onPrimary: Colors.white,
                           onSurface: Colors.black,
@@ -248,16 +250,20 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                     );
                   },
                 );
+                if (!mounted) return;
+
                 if (data != null) {
                   setState(() {
                     dataSelecionada = data;
                     dataController.text =
-                        "${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year}";
+                        "${data.day.toString().padLeft(2, '0')}/"
+                        "${data.month.toString().padLeft(2, '0')}/"
+                        "${data.year}";
                   });
                 }
               },
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             /// BOTÃO
             SizedBox(
@@ -272,8 +278,8 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
                 ),
                 onPressed: _salvando ? null : _salvarTransacao,
                 child: _salvando
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text(
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
                         "Salvar Transação",
                         style: TextStyle(
                           color: Colors.white,
@@ -286,12 +292,11 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavWidget(paginaAtual: 1),
+      bottomNavigationBar: const BottomNavWidget(paginaAtual: 1),
     );
   }
 
   Future<void> _salvarTransacao() async {
-    // Validações
     if (valorController.text.isEmpty) {
       _mostrarErro("Digite um valor");
       return;
@@ -320,9 +325,11 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
       return;
     }
 
-    setState(() {
-      _salvando = true;
-    });
+    if (mounted) {
+      setState(() {
+        _salvando = true;
+      });
+    }
 
     try {
       await TransacaoService.salvar(
@@ -333,10 +340,25 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
         entrada: receita,
       );
 
-      _mostrarSucesso("Transação salva com sucesso!");
-      Navigator.pop(context, true);
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Transação salva com sucesso!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.of(context).pop(true);
     } catch (e) {
-      _mostrarErro("Erro ao salvar: ${e.toString()}");
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erro ao salvar: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -347,23 +369,13 @@ class _TelaNovaTransacao extends State<TelaNovaTransacao> {
   }
 
   void _mostrarErro(String mensagem) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(mensagem),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _mostrarSucesso(String mensagem) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(mensagem),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

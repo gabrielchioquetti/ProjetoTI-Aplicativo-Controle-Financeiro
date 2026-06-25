@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -40,6 +41,52 @@ class FirebaseAuthService {
         password: senha,
       );
       return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> loginComGoogle() async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId:
+            '611709619163-4jiak51eagmllru59rak9humgflnqcjp.apps.googleusercontent.com',
+      );
+
+      final GoogleSignInAccount? usuarioGoogle = await googleSignIn.signIn();
+      if (usuarioGoogle == null) return false;
+
+      final GoogleSignInAuthentication googleAuth =
+          await usuarioGoogle.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      // --- SALVANDO OS DADOS NO FIRESTORE ---
+      if (userCredential.user != null) {
+        final user = userCredential.user!;
+        final docRef =
+            FirebaseFirestore.instance.collection('usuarios').doc(user.uid);
+
+        final docSnapshot = await docRef.get();
+
+        // Se o documento não existir, criamos com os dados do Google
+        if (!docSnapshot.exists) {
+          await docRef.set({
+            'nome': user.displayName ?? "Usuário Google",
+            'email': user.email ?? "",
+            'fotoUrl': user.photoURL ?? "",
+            'dataCadastro': Timestamp.now(),
+          });
+        }
+      }
+
+      return userCredential.user != null;
     } catch (e) {
       return false;
     }

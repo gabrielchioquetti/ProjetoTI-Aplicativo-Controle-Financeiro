@@ -5,13 +5,14 @@ import 'package:flutter_projeto_ti/services/transacao_service.dart';
 import 'package:flutter_projeto_ti/utils/categorias.dart';
 
 class TelaTransacoes extends StatefulWidget {
+  const TelaTransacoes({super.key});
   @override
   State<TelaTransacoes> createState() => _TelaTransacoes();
 }
 
 class _TelaTransacoes extends State<TelaTransacoes> {
   int filtroSelecionado = 0; // 0 = Todas, 1 = Receitas, 2 = Despesas
-  
+
   // Variáveis para os filtros avançados
   DateTime? _dataInicio;
   DateTime? _dataFim;
@@ -51,7 +52,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                     ],
                   ),
                   SizedBox(height: 20),
-                  
+
                   // Filtro por período
                   Text(
                     "Período",
@@ -95,7 +96,8 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 12),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey.shade300),
                               borderRadius: BorderRadius.circular(10),
@@ -105,7 +107,8 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                               children: [
                                 Text(
                                   "Data inicial",
-                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
@@ -152,7 +155,8 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 12),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey.shade300),
                               borderRadius: BorderRadius.circular(10),
@@ -162,7 +166,8 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                               children: [
                                 Text(
                                   "Data final",
-                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
@@ -178,9 +183,9 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                       ),
                     ],
                   ),
-                  
+
                   SizedBox(height: 20),
-                  
+
                   // Filtro por categoria COM ÍCONES
                   Text(
                     "Categoria",
@@ -209,15 +214,9 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                           ...Categoria.todas.map((categoria) {
                             return DropdownMenuItem(
                               value: categoria.nome,
-                              child: Row(
-                                children: [
-                                  Icon(categoria.icone, size: 18, color: Colors.blue),
-                                  SizedBox(width: 8),
-                                  Text(categoria.nome),
-                                ],
-                              ),
+                              child: Text(categoria.nome),
                             );
-                          }).toList(),
+                          }),
                         ],
                         onChanged: (String? valor) {
                           setStateModal(() {
@@ -230,9 +229,9 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 20),
-                  
+
                   // Botões de ação
                   Row(
                     children: [
@@ -280,7 +279,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                       ),
                     ],
                   ),
-                  
+
                   SizedBox(height: 20),
                 ],
               ),
@@ -305,7 +304,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
         'entrada': dados['entrada'],
       },
     );
-    
+
     if (resultado == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -358,7 +357,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
   Future<void> _excluirTransacao(String id, String titulo) async {
     try {
       await TransacaoService.excluir(id);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -405,7 +404,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: corIcone.withOpacity(0.1),
+              color: corIcone.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icone, color: corIcone, size: 24),
@@ -457,7 +456,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                   ),
                 ],
               ),
-              
+
               /// MENU DE OPÇÕES (3 pontinhos)
               PopupMenuButton<String>(
                 icon: Icon(Icons.more_vert, color: Colors.grey),
@@ -526,7 +525,10 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [Colors.blue.shade600, Colors.blue.shade400],
+                              colors: [
+                                Colors.blue.shade600,
+                                Colors.blue.shade400
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -540,7 +542,8 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                                 setState(() {});
                               }
                             },
-                            icon: Icon(Icons.add, size: 28, color: Colors.white),
+                            icon:
+                                Icon(Icons.add, size: 28, color: Colors.white),
                           ),
                         ),
                       ],
@@ -601,20 +604,24 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                         ),
                       ],
                     ),
-                    
+
                     /// INDICADOR DE FILTROS ATIVOS
-                    if (_dataInicio != null || _dataFim != null || _categoriaFiltro != null)
+                    if (_dataInicio != null ||
+                        _dataFim != null ||
+                        _categoriaFiltro != null)
                       Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
                             color: Colors.blue.shade50,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.filter_alt, size: 16, color: Colors.blue.shade700),
+                              Icon(Icons.filter_alt,
+                                  size: 16, color: Colors.blue.shade700),
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -633,28 +640,31 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                                     _categoriaFiltro = null;
                                   });
                                 },
-                                child: Icon(Icons.close, size: 16, color: Colors.blue.shade700),
+                                child: Icon(Icons.close,
+                                    size: 16, color: Colors.blue.shade700),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    
+
                     SizedBox(height: 20),
 
                     /// LISTA DE TRANSAÇÕES COM FILTROS
                     StreamBuilder<QuerySnapshot>(
                       stream: TransacaoService.listar(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Container(
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return SizedBox(
                             height: 300,
                             child: Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.blue),
                                   ),
                                   SizedBox(height: 16),
                                   Text("Carregando transações..."),
@@ -670,11 +680,14 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                             child: Center(
                               child: Column(
                                 children: [
-                                  Icon(Icons.error_outline, size: 48, color: Colors.red),
+                                  Icon(Icons.error_outline,
+                                      size: 48, color: Colors.red),
                                   SizedBox(height: 16),
                                   Text(
                                     "Erro ao carregar transações",
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 8),
                                   Text(snapshot.error.toString()),
@@ -729,7 +742,7 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                         }
 
                         final docs = snapshot.data!.docs;
-                        
+
                         // APLICAR TODOS OS FILTROS
                         final docsFiltrados = docs.where((doc) {
                           final dados = doc.data() as Map<String, dynamic>;
@@ -737,20 +750,30 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                           final Timestamp timestamp = dados["data"];
                           final DateTime data = timestamp.toDate();
                           final String categoria = dados["categoria"];
-                          
+
                           // Filtro rápido (Todas/Receitas/Despesas)
-                          if (filtroSelecionado == 1 && !entrada) return false;
-                          if (filtroSelecionado == 2 && entrada) return false;
-                          
-                          // Filtro por data inicial
-                          if (_dataInicio != null && data.isBefore(_dataInicio!)) return false;
-                          
-                          // Filtro por data final
-                          if (_dataFim != null && data.isAfter(_dataFim!)) return false;
-                          
-                          // Filtro por categoria
-                          if (_categoriaFiltro != null && categoria != _categoriaFiltro) return false;
-                          
+                          if (filtroSelecionado == 1 && !entrada) {
+                            return false;
+                          }
+
+                          if (filtroSelecionado == 2 && entrada) {
+                            return false;
+                          }
+
+                          if (_dataInicio != null &&
+                              data.isBefore(_dataInicio!)) {
+                            return false;
+                          }
+
+                          if (_dataFim != null && data.isAfter(_dataFim!)) {
+                            return false;
+                          }
+
+                          if (_categoriaFiltro != null &&
+                              categoria != _categoriaFiltro) {
+                            return false;
+                          }
+
                           return true;
                         }).toList();
 
@@ -826,12 +849,16 @@ class _TelaTransacoes extends State<TelaTransacoes> {
                               return itemTransacao(
                                 id: id,
                                 dados: dados,
-                                icone: entrada ? Icons.arrow_upward : Icons.arrow_downward,
+                                icone: entrada
+                                    ? Icons.arrow_upward
+                                    : Icons.arrow_downward,
                                 corIcone: entrada ? Colors.green : Colors.red,
                                 titulo: dados["descricao"],
                                 tipo: dados["categoria"],
-                                valor: "${entrada ? "+" : "-"} R\$ ${(dados["valor"] as num).abs().toStringAsFixed(2)}",
-                                data: "${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year}",
+                                valor:
+                                    "${entrada ? "+" : "-"} R\$ ${(dados["valor"] as num).abs().toStringAsFixed(2)}",
+                                data:
+                                    "${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year}",
                                 receita: entrada,
                               );
                             }).toList(),
@@ -889,31 +916,42 @@ class _TelaTransacoes extends State<TelaTransacoes> {
   String _getMesAtual() {
     final now = DateTime.now();
     final meses = [
-      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro"
     ];
     return "${meses[now.month - 1]} de ${now.year}";
   }
-  
+
   // Método para gerar texto dos filtros ativos
   String _getTextoFiltrosAtivos() {
     List<String> filtrosAtivos = [];
-    
+
     if (_dataInicio != null || _dataFim != null) {
       String periodo = "Período: ";
       if (_dataInicio != null) {
-        periodo += "${_dataInicio!.day}/${_dataInicio!.month}/${_dataInicio!.year}";
+        periodo +=
+            "${_dataInicio!.day}/${_dataInicio!.month}/${_dataInicio!.year}";
       }
       if (_dataFim != null) {
         periodo += " até ${_dataFim!.day}/${_dataFim!.month}/${_dataFim!.year}";
       }
       filtrosAtivos.add(periodo);
     }
-    
+
     if (_categoriaFiltro != null) {
-      filtrosAtivos.add("Categoria: ${_categoriaFiltro}");
+      filtrosAtivos.add("Categoria: $_categoriaFiltro");
     }
-    
+
     return filtrosAtivos.join(" • ");
   }
 }
