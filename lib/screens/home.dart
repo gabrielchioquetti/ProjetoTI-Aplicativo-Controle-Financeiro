@@ -216,7 +216,7 @@ class _HomeContentState extends State<_HomeContent> {
           child: Center(
             child: Container(
               padding: const EdgeInsets.all(24),
-              constraints: const BoxConstraints(maxWidth: 500),
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
